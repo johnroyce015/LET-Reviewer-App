@@ -141,3 +141,16 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+# --- CUSTOM LET REVIEWER IGNORES ---
+
+# Ignore API Keys and Database Passwords
+.env
+
+# Ignore compiled Android App files and Capacitor builds
+*.apk
+*.aab
+android/
+ios/
+
+# Ignore Mac system files (if any team members use Mac)
+.DS_Store
