@@ -5,11 +5,27 @@ const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 document.addEventListener('DOMContentLoaded', async () => {
     
-    // 1. SECURITY BOUNCER
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-        window.location.href = 'login.html';
-        return; 
+    // 1. THE VIP BOUNCER: Check session AND role
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    
+    // If they aren't a teacher or admin, kick them out!
+    if (profileError || !profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
+        
+        // Trigger the Universal Modal
+        window.showNeoModal({
+            title: 'Access Denied',
+            icon: 'fa-solid fa-hand',
+            message: 'You are signed in as a Student. You do not have permission to access the Teacher Admin Panel.',
+            headerColor: '#FCA5A5', // Neo-brutalist Red
+            confirmColor: '#EF4444', 
+            confirmText: 'Return to Homepage',
+            onConfirm: async () => {
+                await supabase.auth.signOut();
+                window.location.href = 'index.html';
+            }
+        });
+        
+        return; // Stop the rest of the page from loading
     }
 
     const container = document.getElementById('usersContainer');
@@ -26,7 +42,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 3. FETCH USERS FROM DATABASE
     async function loadUsers() {
         try {
-            // NOTE: This assumes you have created a table named 'profiles' in Supabase to track your users.
             const { data, error } = await supabase.from('profiles').select('*');
 
             if (error) throw error;
@@ -36,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            container.innerHTML = ''; // Clear loading text
+            container.innerHTML = ''; 
 
             data.forEach(user => {
                 const row = document.createElement('div');
@@ -61,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // 4. HANDLE ACCOUNT CREATION
+    // 4. HANDLE ACCOUNT CREATION (Fixed Trigger Integration)
     addUserForm.addEventListener('submit', async (e) => {
         e.preventDefault(); 
         
@@ -69,13 +84,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const password = document.getElementById('newPassword').value;
         const role = document.getElementById('newRole').value;
 
-        // Step A: Create the Auth account AND pass the role to the trigger
+        // Create the Auth account AND pass the role to the trigger
         const { data: authData, error: authError } = await supabase.auth.signUp({
             email: email,
             password: password,
             options: {
                 data: {
-                    role: role // The SQL trigger grabs this and puts it in the profiles table!
+                    role: role 
                 }
             }
         });
@@ -85,14 +100,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // We completely delete "Step B" because the database handles it automatically now!
-
         alert("Success! Account created.");
         closeModal();
         addUserForm.reset(); 
         loadUsers(); 
     });
 
-    // Run the load function on startup
     loadUsers();
 });

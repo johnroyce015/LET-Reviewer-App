@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal Sandbox - LET Reviewer</title>
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <script src="assets/js/modals.js" defer></script>
+</head>
+<body style="padding: 50px; background-color: var(--bg-dashboard);">
+
+    <div class="neo-card" style="max-width: 600px; margin: 0 auto;">
+        
+        <div class="neo-header">
+            <div class="neo-icon" style="background: #C4B5FD;">🧪</div>
+            <div class="neo-header-text">
+                <h1>Modal Testing Sandbox</h1>
+                <p>Click the buttons below to test your universal modals.js function.</p>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 30px;">
+            
+            <button class="neo-button" style="background: #E5E7EB;" onclick="showNeoModal({
+                title: 'System Update',
+                icon: 'fa-solid fa-circle-info',
+                message: 'The LET Reviewer app has been updated to version 2.0.',
+                headerColor: '#F3F4F6',
+                confirmColor: '#111827'
+            })">
+                <i class="fa-solid fa-bell"></i> Test Standard Alert
+            </button>
+
+            <button class="neo-button" style="background: #10B981; color: white;" onclick="showNeoModal({
+                title: 'Upload Successful',
+                icon: 'fa-solid fa-circle-check',
+                message: 'Your CSV file containing 50 new Gen Ed questions has been saved to Supabase.',
+                headerColor: '#A7F3D0',
+                confirmColor: '#10B981',
+                confirmText: 'Awesome!'
+            })">
+                <i class="fa-solid fa-check"></i> Test Success Modal
+            </button>
+
+            <button class="neo-button" style="background: #EF4444; color: white;" onclick="showNeoModal({
+                title: 'Access Denied',
+                icon: 'fa-solid fa-hand',
+                message: 'You must be an administrator to delete user accounts.',
+                headerColor: '#FCA5A5',
+                confirmColor: '#EF4444',
+                confirmText: 'Go Back'
+            })">
+                <i class="fa-solid fa-triangle-exclamation"></i> Test Error Modal
+            </button>
+
+            <button class="neo-button" style="background: #FDE68A;" onclick="showNeoModal({
+                title: 'Confirm Deletion',
+                icon: 'fa-solid fa-trash',
+                message: 'Are you sure you want to permanently delete the category Professional Education? This cannot be undone.',
+                headerColor: '#FDE68A',
+                confirmColor: '#EF4444',
+                confirmText: 'Yes, Delete it',
+                cancelText: 'Cancel',
+                onConfirm: () => alert('You clicked confirm! This is where the Supabase delete code would run.')
+            })">
+                <i class="fa-solid fa-question-circle"></i> Test Two-Button Confirmation
+            </button>
+
+        </div>
+    </div>
+
+</body>
+</html>

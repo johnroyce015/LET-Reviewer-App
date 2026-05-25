@@ -1,16 +1,40 @@
-// Initialize Supabase
+// INITIALIZE SUPABASE
 const supabaseUrl = 'https://hznbjmwmwokjdufbqrkm.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6bmJqbXdtd29ramR1ZmJxcmttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MTY1ODAsImV4cCI6MjA5Mzk5MjU4MH0.ul2LPyJV1m2hfkv2qt4Qr-R6T5fGshITFAJTAa5lLsU';
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    
+    // 1. THE VIP BOUNCER: Check session AND role
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    
+    // If they aren't a teacher or admin, kick them out!
+    if (profileError || !profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
+        
+        // Trigger the Universal Modal
+        window.showNeoModal({
+            title: 'Access Denied',
+            icon: 'fa-solid fa-hand',
+            message: 'You are signed in as a Student. You do not have permission to access the Teacher Admin Panel.',
+            headerColor: '#FCA5A5', // Neo-brutalist Red
+            confirmColor: '#EF4444', 
+            confirmText: 'Return to Homepage',
+            onConfirm: async () => {
+                await supabase.auth.signOut();
+                window.location.href = 'index.html';
+            }
+        });
+        
+        return; // Stop the rest of the page from loading
+    }
+
+    // 2. Fetch Questions
     fetchLiveQuestions();
 });
 
 async function fetchLiveQuestions() {
     const container = document.getElementById('questionsContainer');
     
-    // Fetch newest questions first
     const { data: questions, error } = await supabase
         .from('questions')
         .select('*')
@@ -26,18 +50,15 @@ async function fetchLiveQuestions() {
         return;
     }
 
-    container.innerHTML = ''; // Clear loading text
+    container.innerHTML = ''; 
 
-    // Loop through and build the UI cards
     questions.forEach(q => {
-        // Determine which bubble gets the "correct" styling
         const isA = q.correct_answer === 'A' ? 'correct' : '';
         const isB = q.correct_answer === 'B' ? 'correct' : '';
         const isC = q.correct_answer === 'C' ? 'correct' : '';
         const isD = q.correct_answer === 'D' ? 'correct' : '';
 
-        // Assign category badge color dynamically
-        let catColor = 'math'; // Default yellow
+        let catColor = 'math'; 
         if (q.category && q.category.toLowerCase().includes('general')) catColor = 'math';
         if (q.category && q.category.toLowerCase().includes('professional')) catColor = 'science';
         if (q.category && q.category.toLowerCase().includes('major')) catColor = 'english';
@@ -72,7 +93,7 @@ window.deleteQuestion = async function(id) {
     if(confirm("Are you sure you want to permanently delete this question?")) {
         const { error } = await supabase.from('questions').delete().eq('id', id);
         if(!error) {
-            fetchLiveQuestions(); // Refresh the list
+            fetchLiveQuestions(); 
         } else {
             alert("Error deleting: " + error.message);
         }
