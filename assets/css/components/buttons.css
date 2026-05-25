@@ -1,0 +1,59 @@
+/* NEO-BRUTALIST MAIN BUTTON */
+.neo-button {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--theme-lavender);
+  color: var(--text-main);
+  font-weight: 800;
+  font-size: 15px;
+  border: var(--border-light);
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: var(--shadow-button);
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
+  margin-top: 8px;
+}
+
+.neo-button:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0 var(--brutal-black);
+}
+
+/* DASHBOARD ACTION BUTTONS */
+.action-btn {
+  width: 42px;
+  height: 42px;
+  border: var(--border-heavy);
+  border-radius: 10px;
+  background: var(--brutal-white);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* PRIMARY DASHBOARD BUTTONS (Add Question, etc.) */
+.add-question-btn,
+.new-category-btn {
+  padding: 14px 24px;
+  background: var(--theme-lavender-old);
+  border: var(--border-heavy);
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-button);
+  transition: 0.2s ease;
+  color: var(--text-main);
+}
+
+.add-question-btn:hover,
+.new-category-btn:hover {
+  transform: translateY(-3px);
+}

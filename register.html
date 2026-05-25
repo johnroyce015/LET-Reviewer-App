@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - LET Reviewer</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/auth.js" defer></script>
+</head>
+<body style="background-color: #FAFAFB; display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+
+<div class="neo-card" style="margin: 20px;">
+    
+    <div class="neo-header">
+        <div class="neo-icon">📖</div>
+        <div class="neo-header-text">
+            <h1>Create account</h1>
+            <p>Start your LET prep today</p>
+        </div>
+    </div>
+
+    <form id="registerForm">
+        <div class="neo-form-group">
+            <label class="neo-label">Full name</label>
+            <input type="text" id="regName" class="neo-input" required>
+        </div>
+
+        <div class="neo-form-group">
+            <label class="neo-label">Email</label>
+            <input type="email" id="regEmail" class="neo-input" required>
+        </div>
+
+        <div class="neo-form-group">
+            <label class="neo-label">Password</label>
+            <input type="password" id="regPassword" class="neo-input" required>
+        </div>
+
+        <label class="neo-label">I am a...</label>
+        <div class="neo-role-toggle">
+            <input type="radio" id="student" name="role" value="student" checked>
+            <label for="student" class="neo-role-label">Student</label>
+
+            <input type="radio" id="teacher" name="role" value="teacher">
+            <label for="teacher" class="neo-role-label">Teacher</label>
+        </div>
+
+        <button type="submit" class="neo-button">Create account</button>
+        <div id="regMessage" style="margin-top: 10px; text-align: center; font-weight: bold;"></div>
+    </form>
+
+    <div class="neo-footer-link">
+        Already have an account? <a href="login.html">Sign in</a>
+    </div>
+
+</div>
+
+</body>
+</html>

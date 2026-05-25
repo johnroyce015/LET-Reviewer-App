@@ -1,0 +1,165 @@
+/* ====================================
+   USERS PAGE
+==================================== */
+
+.users-page {
+  padding: 30px;
+}
+
+.users-header-card {
+  width: 100%;
+  background: #dde5f7;
+  border: var(--border-heavy);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 5px 5px 0 var(--brutal-black);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.users-header-left h1 {
+  font-size: 46px;
+  color: var(--text-main);
+  margin-bottom: 10px;
+}
+
+.users-header-left p {
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+.total-users-badge {
+  padding: 12px 18px;
+  background: var(--brutal-white);
+  border: var(--border-heavy);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  box-shadow: var(--shadow-button);
+}
+
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.user-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.user-avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: var(--border-heavy);
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-info h2 {
+  font-size: 26px;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.user-info p {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.user-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.role-badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: var(--border-light);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.teacher-role {
+  background: #c4b5fd;
+}
+.student-role {
+  background: var(--theme-yellow);
+}
+.admin-role {
+  background: #cbd5e1;
+}
+
+.score-badge {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: var(--border-light);
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.joined-date {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.user-menu-btn {
+  width: 42px;
+  height: 42px;
+  border: var(--border-heavy);
+  border-radius: 10px;
+  background: var(--brutal-white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.user-menu-btn:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 950px) {
+  .users-header-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .user-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .user-right {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 650px) {
+  .users-header-left h1 {
+    font-size: 34px;
+  }
+  .user-info h2 {
+    font-size: 22px;
+  }
+}

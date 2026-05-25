@@ -1,0 +1,27 @@
+:root {
+    /* Neo-Brutalist Core Colors */
+    --brutal-black: #111827;
+    --brutal-white: #FFFFFF;
+    
+    /* Theme Colors */
+    --theme-lavender: #C4B5FD;
+    --theme-lavender-old: #B69CFF; /* Kept for legacy dashboard components */
+    --theme-yellow: #FDE68A;
+    --theme-green: #10B981;
+    --theme-mint: #7DD3B0;
+
+    /* Backgrounds */
+    --bg-auth: #FAFAFB;
+    --bg-dashboard: #ECECF6;
+
+    /* Text Colors */
+    --text-main: #111827;
+    --text-muted: #6B7280;
+    --text-light: #4B5563;
+
+    /* Reusable Shadows & Borders */
+    --border-heavy: 3px solid var(--brutal-black);
+    --border-light: 2px solid var(--brutal-black);
+    --shadow-card: 8px 8px 0 var(--brutal-black);
+    --shadow-button: 4px 4px 0 var(--brutal-black);
+}

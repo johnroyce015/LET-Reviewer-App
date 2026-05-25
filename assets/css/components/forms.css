@@ -1,0 +1,76 @@
+/* AUTH FORMS */
+.neo-form-group {
+  margin-bottom: 16px;
+}
+
+.neo-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.neo-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: var(--border-light);
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.neo-input:focus {
+  box-shadow: 0 0 0 3px rgba(196, 181, 253, 0.5);
+}
+
+/* STUDENT / TEACHER TOGGLE */
+.neo-role-toggle {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.neo-role-toggle input[type="radio"] {
+  display: none;
+}
+
+.neo-role-label {
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+  border: var(--border-light);
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-main);
+  cursor: pointer;
+  background: var(--brutal-white);
+  transition: 0.2s;
+}
+
+.neo-role-toggle input[type="radio"]:checked + .neo-role-label {
+  background: var(--theme-lavender);
+}
+
+/* DASHBOARD SEARCH & FILTERS */
+.search-input {
+  width: 100%;
+  height: 56px;
+  border: var(--border-light);
+  border-radius: 10px;
+  padding-left: 45px;
+  font-size: 15px;
+  outline: none;
+}
+
+.filter-select {
+  height: 56px;
+  padding: 0 18px;
+  border: var(--border-heavy);
+  border-radius: 10px;
+  background: var(--brutal-white);
+  font-weight: 600;
+  cursor: pointer;
+}

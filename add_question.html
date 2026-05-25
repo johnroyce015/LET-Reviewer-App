@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Admin - Add LET Question</title>
+
+    <link rel="stylesheet" href="assets/css/style.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="assets/js/script.js" defer></script>
+</head>
+
+<body>
+    <div class="form-container">
+        <h2>Create New LET Question</h2>
+
+        <form id="questionForm">
+            <div class="input-group">
+                <label for="category">Subject Category</label>
+                <select id="category" name="category" required>
+                    <option value="General Education">General Education</option>
+                    <option value="Professional Education">
+                        Professional Education
+                    </option>
+                    <option value="Major: English">Major: English</option>
+                    <option value="Major: Mathematics">Major: Mathematics</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="question_text">Question Text</label>
+                <textarea id="question_text" name="question_text" rows="3" required
+                    placeholder="Type the question here..."></textarea>
+            </div>
+
+            <fieldset class="options-group">
+                <legend>Answer Options (Select the correct one)</legend>
+
+                <div class="option-row">
+                    <input type="radio" id="correct_a" name="correct_answer" value="A" required />
+                    <label for="correct_a">A.</label>
+                    <input type="text" name="option_a" required placeholder="Option A" />
+                </div>
+                <div class="option-row">
+                    <input type="radio" id="correct_b" name="correct_answer" value="B" />
+                    <label for="correct_b">B.</label>
+                    <input type="text" name="option_b" required placeholder="Option B" />
+                </div>
+                <div class="option-row">
+                    <input type="radio" id="correct_c" name="correct_answer" value="C" />
+                    <label for="correct_c">C.</label>
+                    <input type="text" name="option_c" required placeholder="Option C" />
+                </div>
+                <div class="option-row">
+                    <input type="radio" id="correct_d" name="correct_answer" value="D" />
+                    <label for="correct_d">D.</label>
+                    <input type="text" name="option_d" required placeholder="Option D" />
+                </div>
+            </fieldset>
+
+            <button type="submit" id="submitBtn">Save Question to Cloud</button>
+            <div id="statusMessage"></div>
+        </form>
+    </div>
+</body>
+
+</html>

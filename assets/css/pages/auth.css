@@ -1,0 +1,112 @@
+/* NEO-BRUTALIST AUTH OVERRIDES */
+.neo-auth-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-auth);
+}
+
+.neo-auth-left {
+  flex: 1;
+  background: url("../../images/background.jpg") center/cover no-repeat;
+  position: relative;
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .neo-auth-left {
+    display: block;
+  }
+}
+
+.neo-floating-badge {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  background: var(--brutal-white);
+  border: var(--border-light);
+  box-shadow: 6px 6px 0 var(--brutal-black);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 300px;
+}
+
+.neo-floating-badge h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.neo-floating-badge p {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+.neo-auth-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.neo-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.neo-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--theme-yellow);
+  border: var(--border-light);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+}
+
+.neo-header-text h1 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.neo-header-text p {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.neo-demo-box {
+  margin-top: 24px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.neo-demo-box strong {
+  color: #374151;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.neo-footer-link {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.neo-footer-link a {
+  font-weight: 700;
+  color: var(--text-main);
+  text-decoration: underline;
+}

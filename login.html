@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LET Reviewer</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/auth.js" defer></script>
+</head>
+<body>
+
+<div class="neo-auth-layout">
+    <div class="neo-auth-left">
+        <div class="neo-floating-badge">
+            <h3>Review. Repeat. Rise.</h3>
+            <p>Your daily habit toward LET success starts here.</p>
+        </div>
+    </div>
+
+    <div class="neo-auth-right">
+        <div class="neo-card">
+            
+            <div class="neo-header">
+                <div class="neo-icon">📖</div>
+                <div class="neo-header-text">
+                    <h1>Welcome back</h1>
+                    <p>Sign in to continue</p>
+                </div>
+            </div>
+
+            <form id="loginForm">
+                <div class="neo-form-group">
+                    <label class="neo-label">Email</label>
+                    <input type="email" id="loginEmail" class="neo-input" placeholder="you@school.edu" required>
+                </div>
+
+                <div class="neo-form-group">
+                    <label class="neo-label">Password</label>
+                    <input type="password" id="loginPassword" class="neo-input" placeholder="Your password" required>
+                </div>
+
+                <button type="submit" class="neo-button">Sign in</button>
+                <div id="loginMessage" style="margin-top: 10px; text-align: center; font-weight: bold;"></div>
+            </form>
+
+            <div class="neo-footer-link">
+                No account? <a href="register.html">Create one</a>
+            </div>
+
+            <div class="neo-demo-box">
+                <strong>Demo credentials</strong>
+                Student: student@letreview.ph / Student123!<br>
+                Teacher: admin@letreview.ph / Admin123!
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="errorModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content neo-brutal-modal">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-triangle-exclamation" style="color: #EF4444;"></i> Login Failed</h3>
+                <button class="close-modal-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessageText">Something went wrong.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="neo-button" id="modalOkBtn" style="padding: 10px 20px; width: auto; background: #FDE68A; color: #111827;">Try Again</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

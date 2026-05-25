@@ -1,0 +1,63 @@
+/* =========================================
+   SIDEBAR NAVIGATION
+========================================= */
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  background: var(--brutal-white);
+  border-right: var(--border-heavy);
+  padding: 25px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+/* Nav Link Container */
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Individual Links */
+.menu-item {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+  transition: 0.2s ease;
+  text-decoration: none;
+}
+
+/* NEW: Icon Alignment Fix */
+.menu-item i {
+  width: 25px;
+  text-align: center;
+}
+
+/* Hover & Active States (Your original beautiful design!) */
+.menu-item:hover {
+  background: #ede9fe;
+}
+
+.menu-item.active {
+  background: var(--theme-lavender-old);
+  border: var(--border-heavy);
+  color: var(--text-main);
+  box-shadow: var(--shadow-button);
+}

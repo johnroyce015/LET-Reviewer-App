@@ -1,0 +1,180 @@
+/* ====================================
+   QUESTIONS PAGE
+==================================== */
+
+.questions-page {
+  padding: 30px;
+}
+
+.questions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+}
+
+.questions-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 10px;
+}
+
+.questions-subtitle {
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.filter-bar {
+  width: 100%;
+  background: var(--brutal-white);
+  border: var(--border-heavy);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  box-shadow: 5px 5px 0 var(--brutal-black);
+  margin-bottom: 24px;
+}
+
+.search-box {
+  flex: 1;
+  position: relative;
+}
+
+.search-box i {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  color: #9ca3af;
+}
+
+.question-table-header {
+  width: 100%;
+  background: var(--theme-yellow);
+  border: var(--border-light);
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.question-card {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+  gap: 18px;
+  align-items: center;
+}
+
+.question-info h3 {
+  font-size: 18px;
+  color: var(--text-main);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.question-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.choice {
+  padding: 8px 12px;
+  background: #ede9fe;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+.choice.correct {
+  background: #d8b4fe;
+  color: #4c1d95;
+}
+
+.category-badge,
+.difficulty-badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: var(--border-light);
+  font-size: 13px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+/* Category Colors */
+.science {
+  background: #86efac;
+}
+.math {
+  background: var(--theme-yellow);
+}
+.english {
+  background: #c4b5fd;
+}
+
+/* Difficulty Colors */
+.easy {
+  background: #6ee7b7;
+}
+.medium {
+  background: #fcd34d;
+}
+.hard {
+  background: #fca5a5;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 40px;
+}
+
+.page-btn {
+  min-width: 50px;
+  height: 50px;
+  padding: 0 18px;
+  border: var(--border-heavy);
+  border-radius: 10px;
+  background: var(--brutal-white);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.page-btn.active {
+  background: var(--theme-lavender-old);
+}
+
+@media (max-width: 1200px) {
+  .question-card,
+  .question-table-header {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .questions-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

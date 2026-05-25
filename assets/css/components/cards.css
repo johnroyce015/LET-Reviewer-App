@@ -1,0 +1,78 @@
+/* MAIN AUTH CARD */
+.neo-card {
+  background: var(--brutal-white);
+  border: var(--border-heavy);
+  box-shadow: var(--shadow-card);
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 440px;
+}
+
+/* DASHBOARD STAT CARDS */
+.stat-card {
+  border: var(--border-heavy);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 5px 5px 0 var(--brutal-black);
+}
+
+.stat-card.yellow {
+  background: var(--theme-yellow);
+}
+.stat-card.green {
+  background: var(--theme-mint);
+}
+.stat-card.white {
+  background: var(--brutal-white);
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border: var(--border-heavy);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--brutal-white);
+  font-size: 20px;
+  margin-bottom: 18px;
+}
+
+/* LIST CARDS (Questions, Users, Categories) */
+.question-card,
+.user-card {
+  width: 100%;
+  background: var(--brutal-white);
+  border: var(--border-heavy);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 5px 5px 0 var(--brutal-black);
+  margin-bottom: 18px;
+  transition: 0.2s ease;
+}
+
+.question-card:hover,
+.user-card:hover {
+  transform: translateY(-2px);
+}
+
+.category-card {
+  border: var(--border-heavy);
+  border-radius: 18px;
+  padding: 20px;
+  position: relative;
+  box-shadow: 5px 5px 0 var(--brutal-black);
+  overflow: hidden;
+}
+
+.category-card.purple {
+  background: var(--theme-lavender-old);
+}
+.category-card.yellow {
+  background: var(--theme-yellow);
+}
+.category-card.green {
+  background: var(--theme-mint);
+}

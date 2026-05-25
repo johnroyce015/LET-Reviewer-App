@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Upload - LET Reviewer</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    
+    <script src="assets/js/bulk.js" defer></script>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="topbar-brand">LETReviewer</div>
+    <div class="topbar-nav">
+        <a href="dashboard.html" class="topbar-link"><i class="fa-solid fa-table-cells-large"></i> OVERVIEW</a>
+        <a href="questions.html" class="topbar-link"><i class="fa-solid fa-square-question"></i> QUESTIONS</a>
+        <a href="categories.html" class="topbar-link active"><i class="fa-solid fa-layer-group"></i> CATEGORIES</a>
+        <a href="#" class="topbar-link"><i class="fa-solid fa-users"></i> USERS</a>
+    </div>
+</div>
+
+<div class="bulk-upload-page">
+    <a href="dashboard.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+    
+    <h1 class="bulk-upload-title">Bulk upload</h1>
+    <p class="bulk-upload-subtitle">Import questions from CSV to quickly build your assessments.</p>
+
+    <div id="uploadMessage" style="margin-bottom: 20px; font-weight: bold; font-size: 18px;"></div>
+
+    <form id="bulkUploadForm">
+        <div class="bulk-upload-layout">
+            
+            <div class="upload-settings">
+                <div class="settings-title">
+                    <div class="settings-icon"><i class="fa-solid fa-folder"></i></div>
+                    Target Category
+                </div>
+                
+                <label class="upload-label">Select Destination</label>
+                <select id="categorySelect" class="upload-select" required>
+                    <option value="">Loading categories...</option>
+                </select>
+
+                <div class="template-box">
+                    <h4>Need a template?</h4>
+                    <p style="font-size: 13px; margin-bottom: 15px; color: #4B5563;">Your CSV must have exactly 6 columns: <br><b>Question, Option A, Option B, Option C, Option D, Correct Answer (A/B/C/D)</b></p>
+                </div>
+            </div>
+
+            <label class="upload-drop-area" id="dropArea">
+                <input type="file" id="fileInput" class="file-input" accept=".csv" required>
+                <div class="upload-icon"><i class="fa-solid fa-file-arrow-up"></i></div>
+                <h2>Click to select a CSV file</h2>
+                <div class="file-types"><span>.csv</span><span>Max 10MB</span></div>
+                <div class="selected-file" id="selectedFile">No file selected</div>
+            </label>
+        </div>
+
+        <button type="submit" id="uploadBtn" class="upload-btn">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Upload File
+        </button>
+    </form>
+</div>
+
+</body>
+</html>
