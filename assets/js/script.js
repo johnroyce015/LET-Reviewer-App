@@ -1,3 +1,5 @@
+const supabase = window.supabaseClient;
+
 document.addEventListener('DOMContentLoaded', () => {
     const questionForm = document.getElementById('questionForm');
     const statusMessage = document.getElementById('statusMessage');
