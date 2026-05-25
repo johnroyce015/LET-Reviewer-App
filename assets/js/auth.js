@@ -49,4 +49,45 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+    // --- HANDLE REGISTRATION ---
+    const registerForm = document.getElementById('registerForm');
+    const regMessage = document.getElementById('regMessage');
+
+    if (registerForm) {
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+
+            // Create the account and pass the metadata for the trigger
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        full_name: name,
+                        role: role
+                    }
+                }
+            });
+
+            if (error) {
+                console.error("Registration Failed:", error.message);
+                regMessage.style.color = '#EF4444'; // Neo-brutalist Red
+                regMessage.textContent = error.message;
+            } else {
+                regMessage.style.color = '#10B981'; // Neo-brutalist Green
+                regMessage.textContent = "Registration successful! You can now sign in.";
+                registerForm.reset();
+                
+                // Optional: Automatically redirect them to login after a second
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+            }
+        });
+    }
 });

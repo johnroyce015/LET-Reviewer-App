@@ -1,91 +1,98 @@
-// Initialize Supabase
+// INITIALIZE SUPABASE
 const supabaseUrl = 'https://hznbjmwmwokjdufbqrkm.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6bmJqbXdtd29ramR1ZmJxcmttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MTY1ODAsImV4cCI6MjA5Mzk5MjU4MH0.ul2LPyJV1m2hfkv2qt4Qr-R6T5fGshITFAJTAa5lLsU';
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-document.addEventListener('DOMContentLoaded', () => {
-    fetchLiveUsers();
-});
-
-async function fetchLiveUsers() {
-    const container = document.getElementById('usersContainer');
+document.addEventListener('DOMContentLoaded', async () => {
     
-    // Fetch data from the profiles table
-    const { data: users, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('id', { ascending: true });
-
-    if (error) {
-        container.innerHTML = `<div style="color: red; padding: 20px;">Error loading users: ${error.message}</div>`;
-        return;
+    // 1. SECURITY BOUNCER
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+        window.location.href = 'login.html';
+        return; 
     }
 
-    if (users.length === 0) {
-        container.innerHTML = `<div style="padding: 20px; font-weight: bold;">No users found in the system yet.</div>`;
-        return;
+    const container = document.getElementById('usersContainer');
+    const addUserBtn = document.getElementById('openAddUserBtn');
+    const addUserModal = document.getElementById('addUserModal');
+    const addUserForm = document.getElementById('addUserForm');
+
+    // 2. MODAL CONTROLS
+    const closeModal = () => addUserModal.style.display = 'none';
+    addUserBtn.addEventListener('click', () => addUserModal.style.display = 'flex');
+    document.getElementById('closeAddUserBtn').addEventListener('click', closeModal);
+    document.getElementById('cancelAddUserBtn').addEventListener('click', closeModal);
+
+    // 3. FETCH USERS FROM DATABASE
+    async function loadUsers() {
+        try {
+            // NOTE: This assumes you have created a table named 'profiles' in Supabase to track your users.
+            const { data, error } = await supabase.from('profiles').select('*');
+
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center; font-weight: bold;">No users found in profiles table.</div>';
+                return;
+            }
+
+            container.innerHTML = ''; // Clear loading text
+
+            data.forEach(user => {
+                const row = document.createElement('div');
+                row.style = "display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; padding: 15px 20px; border-bottom: 2px solid #111827; align-items: center; background: #FFFFFF; font-weight: 500;";
+                row.innerHTML = `
+                    <div style="font-weight: 700;">${user.email || 'Unknown'}</div>
+                    <div>
+                        <span style="background: ${user.role === 'teacher' ? '#C4B5FD' : '#E0E7FF'}; color: #111827; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 800; border: 2px solid #111827;">
+                            ${user.role ? user.role.toUpperCase() : 'STUDENT'}
+                        </span>
+                    </div>
+                    <div><span style="color: #10B981; font-weight: bold;">Active</span></div>
+                    <div style="display: flex; gap: 10px;">
+                        <button style="background: #FCA5A5; border: 2px solid #111827; border-radius: 6px; padding: 5px 10px; cursor: pointer; font-weight: bold;"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        } catch (err) {
+            console.error("Error loading users:", err);
+            container.innerHTML = `<div style="padding: 20px; text-align: center; color: #EF4444; font-weight: bold;">Error loading users. (Did you create a 'profiles' table?)</div>`;
+        }
     }
 
-    container.innerHTML = ''; // Clear loading text
+    // 4. HANDLE ACCOUNT CREATION
+    addUserForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); 
+        
+        const email = document.getElementById('newEmail').value;
+        const password = document.getElementById('newPassword').value;
+        const role = document.getElementById('newRole').value;
 
-    // Loop through the database rows and create HTML user cards
-    users.forEach(user => {
-        
-        // 1. Determine Badge Styling based on Role
-        let roleBadge = '';
-        let streakBadge = '';
-        
-        if (user.role && user.role.toLowerCase() === 'teacher') {
-            roleBadge = `<span class="role-badge teacher-role">Teacher / Admin</span>`;
-            // Teachers don't get streaks, so we just show their join date or a placeholder
-            streakBadge = `<span class="joined-date">Verified Instructor</span>`;
-        } else {
-            roleBadge = `<span class="role-badge student-role">Student</span>`;
-            // Students get the streak badge
-            const currentStreak = user.streak || 0;
-            streakBadge = `<span class="score-badge"><i class="fa-solid fa-fire" style="color: #F59E0B;"></i> ${currentStreak} Day Streak</span>`;
+        // Step A: Create the Auth account AND pass the role to the trigger
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+            options: {
+                data: {
+                    role: role // The SQL trigger grabs this and puts it in the profiles table!
+                }
+            }
+        });
+
+        if (authError) {
+            alert("Error creating account: " + authError.message);
+            return;
         }
 
-        // 2. Generate an Avatar dynamically using their name
-        const encodedName = encodeURIComponent(user.full_name || 'Unknown User');
-        // Give teachers purple avatars, students yellow ones
-        const avatarBg = (user.role && user.role.toLowerCase() === 'teacher') ? 'C4B5FD' : 'FDE68A';
-        const avatarUrl = `https://ui-avatars.com/api/?name=${encodedName}&background=${avatarBg}&color=111827&bold=true`;
+        // We completely delete "Step B" because the database handles it automatically now!
 
-        // 3. Build the actual card HTML
-        const card = document.createElement('div');
-        card.className = 'user-card';
-        card.style.cssText = 'display: flex; justify-content: space-between; align-items: center;';
-        
-        card.innerHTML = `
-            <div class="user-left">
-                <div class="user-avatar"><img src="${avatarUrl}" alt="${user.full_name}"></div>
-                <div class="user-info">
-                    <h2>${user.full_name || 'Unknown'}</h2>
-                    <p>${user.email || 'No email provided'}</p>
-                </div>
-            </div>
-            <div class="user-right">
-                ${roleBadge}
-                ${streakBadge}
-                <button class="user-menu-btn" onclick="deleteUser(${user.id})" title="Remove User">
-                    <i class="fa-solid fa-trash" style="color: #EF4444;"></i>
-                </button>
-            </div>
-        `;
-        
-        container.appendChild(card);
+        alert("Success! Account created.");
+        closeModal();
+        addUserForm.reset(); 
+        loadUsers(); 
     });
-}
 
-// Temporary Delete Function for Admin purposes
-window.deleteUser = async function(id) {
-    if(confirm("Are you sure you want to remove this user profile from the database?")) {
-        const { error } = await supabase.from('profiles').delete().eq('id', id);
-        if(!error) {
-            fetchLiveUsers(); // Refresh the grid
-        } else {
-            alert("Error deleting user: " + error.message);
-        }
-    }
-};
+    // Run the load function on startup
+    loadUsers();
+});
