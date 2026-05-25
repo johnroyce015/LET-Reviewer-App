@@ -8,24 +8,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 1. THE VIP BOUNCER: Check session AND role
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     
-    // If they aren't a teacher or admin, kick them out!
+    if (sessionError || !session) {
+        window.location.href = 'login.html';
+        return; 
+    }
+
+    const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+
     if (profileError || !profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
-        
-        // Trigger the Universal Modal
         window.showNeoModal({
             title: 'Access Denied',
             icon: 'fa-solid fa-hand',
-            message: 'You are signed in as a Student. You do not have permission to access the Teacher Admin Panel.',
-            headerColor: '#FCA5A5', // Neo-brutalist Red
-            confirmColor: '#EF4444', 
-            confirmText: 'Return to Homepage',
+            message: 'You do not have permission to view the Teacher Admin Panel.',
+            headerColor: '#FCA5A5',
+            confirmColor: '#EF4444',
+            confirmText: 'Return Home',
             onConfirm: async () => {
                 await supabase.auth.signOut();
                 window.location.href = 'index.html';
             }
         });
-        
-        return; // Stop the rest of the page from loading
+        return;
     }
 
     // 2. Fetch Categories
@@ -82,12 +89,21 @@ async function fetchLiveCategories() {
 
 // Delete Functionality
 window.deleteCategory = async function(id) {
-    if(confirm("Delete this category? (Note: Ensure no questions are currently linked to it!)")) {
-        const { error } = await supabase.from('categories').delete().eq('id', id);
-        if(!error) {
-            fetchLiveCategories(); 
-        } else {
-            alert("Error deleting: " + error.message);
+    window.showNeoModal({
+        title: 'Confirm Deletion',
+        icon: 'fa-solid fa-trash',
+        message: 'Are you sure you want to delete this category? Ensure no questions are currently linked to it!',
+        headerColor: '#FDE68A',
+        confirmColor: '#EF4444',
+        confirmText: 'Yes, Delete',
+        cancelText: 'Cancel',
+        onConfirm: async () => {
+            const { error } = await supabase.from('categories').delete().eq('id', id);
+            if(!error) {
+                fetchLiveCategories(); 
+            } else {
+                alert("Error deleting: " + error.message);
+            }
         }
-    }
+    });
 };
