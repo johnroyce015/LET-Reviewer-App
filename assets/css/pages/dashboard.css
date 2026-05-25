@@ -1,14 +1,15 @@
 /* DASHBOARD LAYOUT */
 .dashboard-layout {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  background: var(--bg-dashboard);
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    background: #F3F4F6;
 }
 
 .dashboard-main {
   flex: 1;
-  padding: 25px;
+  padding: 30px;
+  overflow-y: auto;
 }
 
 /* WELCOME CARD */

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Questions - LET Reviewer</title>
+    
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
@@ -24,7 +25,7 @@
 
             <nav>
                 <a href="dashboard.html" class="menu-item"><i class="fa-solid fa-table-cells-large"></i> Overview</a>
-                <a href="questions.html" class="menu-item active"><i class="fa-solid fa-square-question"></i> Questions</a>
+                <a href="questions.html" class="menu-item"><i class="fa-solid fa-circle-question"></i> Questions</a>
                 <a href="categories.html" class="menu-item"><i class="fa-solid fa-layer-group"></i> Categories</a>
                 <a href="users.html" class="menu-item"><i class="fa-solid fa-users"></i> Users</a>
             </nav>
@@ -35,12 +36,15 @@
 
     <main class="dashboard-main">
         <div class="questions-page" style="padding: 0;">
+            
             <div class="questions-header">
                 <div>
                     <h1 class="questions-title">Questions</h1>
                     <p class="questions-subtitle">Manage and review all your LET mock exam questions here.</p>
                 </div>
-                <button class="add-question-btn"><i class="fa-solid fa-plus"></i> Add Question</button>
+                <button class="add-question-btn" onclick="window.location.href='add_question.html'">
+                    <i class="fa-solid fa-plus"></i> Add Question
+                </button>
             </div>
 
             <div class="filter-bar">
@@ -66,25 +70,26 @@
             <div id="questionsContainer">
                 <div style="padding: 20px; text-align: center;">Loading questions...</div>
             </div>
+
         </div>
     </main>
 
 </div>
 
 <div id="logoutModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content neo-brutal-modal">
-            <div class="modal-header" style="background: #FDE68A;"> 
-                <h3><i class="fa-solid fa-right-from-bracket"></i> Confirm Logout</h3>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to log out of the admin panel? You will need to sign in again to access your dashboard.</p>
-            </div>
-            <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button class="neo-button" id="cancelLogoutBtn" style="background: #E5E7EB; color: #111827; width: auto; padding: 10px 20px;">Cancel</button>
-                <button class="neo-button" id="confirmLogoutBtn" style="background: #EF4444; color: #FFFFFF; width: auto; padding: 10px 20px;">Log Out</button>
-            </div>
+    <div class="modal-content neo-brutal-modal">
+        <div class="modal-header" style="background: #FDE68A;">
+            <h3><i class="fa-solid fa-right-from-bracket"></i> Confirm Logout</h3>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to log out of the admin panel? You will need to sign in again to access your dashboard.</p>
+        </div>
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button class="neo-button" id="cancelLogoutBtn" style="background: #E5E7EB; color: #111827; width: auto; padding: 10px 20px;">Cancel</button>
+            <button class="neo-button" id="confirmLogoutBtn" style="background: #EF4444; color: #FFFFFF; width: auto; padding: 10px 20px;">Log Out</button>
         </div>
     </div>
+</div>
 
 </body>
 </html>

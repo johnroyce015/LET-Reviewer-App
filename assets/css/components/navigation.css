@@ -56,8 +56,9 @@
 }
 
 .menu-item.active {
-  background: var(--theme-lavender-old);
-  border: var(--border-heavy);
-  color: var(--text-main);
-  box-shadow: var(--shadow-button);
+  background: #C4B5FD;
+  border: 3px solid #111827 !important;
+  color: #111827 !important;
+  box-shadow: 4px 4px 0px #111827 !important;
+  font-weight: 800;
 }
