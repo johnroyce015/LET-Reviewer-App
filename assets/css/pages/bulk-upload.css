@@ -210,3 +210,16 @@
     font-size: 28px;
   }
 }
+
+.bulk-upload-page {
+  height: calc(100vh - 60px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+body:has(.bulk-upload-page) .dashboard-main {
+  overflow: hidden;
+  height: 100vh;
+  padding-bottom: 0;
+}

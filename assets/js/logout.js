@@ -1,4 +1,4 @@
-const supabase = window.supabaseClient;
+var supabase = window.supabaseClient;
 
 document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('logoutBtn');
@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 confirmText: 'Log Out',
                 cancelText: 'Cancel',
                 onConfirm: async () => {
-                    // Securely sign out using the unique client
-                    await logoutClient.auth.signOut();
+                    // SECURE SIGN OUT (Fixed typo to use shared supabase client)
+                    await supabase.auth.signOut();
                     window.location.href = 'login.html';
                 }
             });

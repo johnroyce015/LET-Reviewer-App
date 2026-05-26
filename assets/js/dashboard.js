@@ -1,19 +1,30 @@
-const supabase = window.supabaseClient;
+var supabase = window.supabaseClient;
 
 document.addEventListener('DOMContentLoaded', async () => {
     
     // 1. THE VIP BOUNCER: Check session AND role
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     
+    if (sessionError || !session) {
+        window.location.href = 'login.html';
+        return; 
+    }
+
+    // Actually fetch the profile data from the database first!
+    const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+
     // If they aren't a teacher or admin, kick them out!
     if (profileError || !profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
         
-        // Trigger the Universal Modal
         window.showNeoModal({
             title: 'Access Denied',
             icon: 'fa-solid fa-hand',
             message: 'You are signed in as a Student. You do not have permission to access the Teacher Admin Panel.',
-            headerColor: '#FCA5A5', // Neo-brutalist Red
+            headerColor: '#FCA5A5', 
             confirmColor: '#EF4444', 
             confirmText: 'Return to Homepage',
             onConfirm: async () => {
@@ -22,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
         
-        return; // Stop the rest of the page from loading
+        return; 
     }
 
     // 2. Fetch the live data
@@ -30,13 +41,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function fetchDashboardStats() {
-    // Grab the HTML elements
     const statQuestions = document.getElementById('statQuestions');
     const statCategories = document.getElementById('statCategories');
     const statUsers = document.getElementById('statUsers');
     const statActive = document.getElementById('statActive');
 
-    // Make them say "..." while loading
     if(statQuestions) statQuestions.textContent = '...';
     if(statCategories) statCategories.textContent = '...';
     
@@ -60,7 +69,7 @@ async function fetchDashboardStats() {
 
     // --- 3. COUNT USERS ---
     if(statUsers && statActive) {
-        statUsers.textContent = '142'; // Static placeholder
-        statActive.textContent = '28'; // Static placeholder
+        statUsers.textContent = '142'; 
+        statActive.textContent = '28'; 
     }
 }
