@@ -4,6 +4,16 @@
 
 .bulk-upload-page {
   padding: 40px;
+  height: calc(100vh - 40px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+body:has(.bulk-upload-page) .dashboard-main {
+  overflow: hidden;
+  height: 100vh;
 }
 
 .back-link {
@@ -12,25 +22,37 @@
   gap: 8px;
   color: #7c3aed;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  flex-shrink: 0;
 }
 
 .bulk-upload-title {
   font-size: 52px;
   color: var(--text-main);
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  flex-shrink: 0;
 }
 
 .bulk-upload-subtitle {
   font-size: 16px;
   color: var(--text-muted);
-  margin-bottom: 40px;
+  margin-bottom: 25px;
+  flex-shrink: 0;
+}
+
+#bulkUploadForm {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
 }
 
 .bulk-upload-layout {
   display: flex;
   gap: 30px;
-  align-items: flex-start;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
 }
 
 .upload-settings {
@@ -40,16 +62,20 @@
   border-radius: 18px;
   padding: 22px;
   box-shadow: 5px 5px 0 var(--brutal-black);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .settings-title {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--text-main);
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .settings-icon {
@@ -73,14 +99,14 @@
 
 .upload-select {
   width: 100%;
-  height: 58px;
+  height: 52px;
   border: var(--border-heavy);
   border-radius: 12px;
   padding: 0 15px;
   font-size: 15px;
   font-weight: 600;
   outline: none;
-  margin-bottom: 24px;
+  margin-bottom: 15px;
 }
 
 .template-box {
@@ -88,13 +114,14 @@
   background: #eef2ff;
   border: var(--border-light);
   border-radius: 12px;
-  padding: 18px;
+  padding: 15px;
+  box-sizing: border-box;
 }
 
 .template-box h4 {
   font-size: 16px;
   color: var(--text-main);
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .template-btn {
@@ -115,7 +142,6 @@
 
 .upload-drop-area {
   flex: 1;
-  min-height: 420px;
   border: 4px dashed var(--brutal-black);
   border-radius: 18px;
   background: var(--brutal-white);
@@ -124,8 +150,9 @@
   align-items: center;
   flex-direction: column;
   text-align: center;
-  padding: 40px;
+  padding: 30px;
   position: relative;
+  min-height: 0;
 }
 
 .upload-drop-area.dragover {
@@ -133,29 +160,23 @@
 }
 
 .upload-icon {
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   background: var(--theme-lavender-old);
   border: 4px solid var(--brutal-black);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 36px;
-  box-shadow: 5px 5px 0 var(--brutal-black);
-  margin-bottom: 25px;
+  font-size: 32px;
+  box-shadow: 4px 4px 0 var(--brutal-black);
+  margin-bottom: 20px;
 }
 
 .upload-drop-area h2 {
-  font-size: 38px;
+  font-size: 32px;
   color: var(--text-main);
-  margin-bottom: 14px;
-}
-
-.upload-drop-area p {
-  color: var(--text-muted);
-  margin-bottom: 18px;
-  font-size: 16px;
+  margin-bottom: 10px;
 }
 
 .file-types {
@@ -163,7 +184,7 @@
   gap: 16px;
   color: var(--text-muted);
   font-size: 14px;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 
 .file-input {
@@ -171,13 +192,13 @@
 }
 
 .selected-file {
-  margin-top: 20px;
+  margin-top: 15px;
   font-weight: 700;
   color: var(--text-main);
 }
 
 .upload-btn {
-  margin-top: 30px;
+  margin-top: 20px;
   width: 260px;
   height: 62px;
   background: var(--theme-mint);
@@ -188,6 +209,7 @@
   cursor: pointer;
   box-shadow: 5px 5px 0 var(--brutal-black);
   transition: 0.2s ease;
+  flex-shrink: 0;
 }
 
 .upload-btn:hover {
@@ -201,25 +223,4 @@
   .upload-settings {
     width: 100%;
   }
-}
-@media (max-width: 650px) {
-  .bulk-upload-title {
-    font-size: 38px;
-  }
-  .upload-drop-area h2 {
-    font-size: 28px;
-  }
-}
-
-.bulk-upload-page {
-  height: calc(100vh - 60px);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-body:has(.bulk-upload-page) .dashboard-main {
-  overflow: hidden;
-  height: 100vh;
-  padding-bottom: 0;
 }

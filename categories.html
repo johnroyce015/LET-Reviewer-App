@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categories - LET Reviewer</title>
+    <title>Categories Management - LET Reviewer</title>
     
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <script src="assets/js/supabase.js?v=999" defer></script>
-    <script src="assets/js/categories.js?v=999" defer></script>
-    <script src="assets/js/modals.js?v=999" defer></script>
-    <script src="assets/js/logout.js?v=999" defer></script>
+    <script src="assets/js/supabase.js?" defer></script>
+    <script src="assets/js/categories.js?" defer></script>
+    <script src="assets/js/modals.js?" defer></script>
+    <script src="assets/js/logout.js?" defer></script>
 </head>
 <body>
 
@@ -36,48 +36,69 @@
     </aside>
 
     <main class="dashboard-main">
-        <div class="neo-header" style="margin-bottom: 30px;">
-            <div class="neo-icon" style="background: #C4B5FD;"><i class="fa-solid fa-layer-group"></i></div>
-            <div class="neo-header-text">
-                <h1 style="font-size: 28px; margin-bottom: 5px;">Categories</h1>
-                <p style="margin: 0;">Manage your subject areas and upload new question banks.</p>
+        
+        <div class="categories-page-header">
+            <div class="header-titles">
+                <h1>Categories Management</h1>
+                <p>Organize and manage the core subject areas for the Licensure Examination for Teachers.</p>
+            </div>
+            
+            <div class="header-actions">
+                <button onclick="window.location.href='bulk-upload.html'" class="neo-button btn-bulk-upload">
+                    <i class="fa-solid fa-file-import"></i> Bulk Upload
+                </button>
+                <button id="newCategoryActionBtn" class="neo-button btn-new-category">
+                    <i class="fa-solid fa-plus"></i> New category
+                </button>
             </div>
         </div>
 
         <div id="categoryContainer" class="categories-grid">
-            <h2 style="grid-column: 1 / -1; text-align: center; margin-top: 50px;">Loading categories...</h2>
+            <h2>Loading categories...</h2>
         </div>
     </main>
 
 </div>
 
 <template id="categoryCardTemplate">
-        <div class="category-card">
-            <div class="category-top">
-                <div class="category-status"><div class="status-dot"></div> Active</div>
-                <div class="category-card-actions">
-                    <button class="category-action-btn" title="Delete Category">
-                        <i class="fa-solid fa-trash" style="color: #EF4444;"></i>
-                    </button>
+    <div class="category-card">
+        <div>
+            <div class="category-card-header">
+                <span class="status-badge">
+                    <span class="status-dot"></span>
+                    ACTIVE
+                </span>
+                <div class="category-actions">
+                    <button class="edit-card-square" title="Edit Category"><i class="fa-solid fa-pen"></i></button>
+                    <button class="delete-card-square" title="Delete Category"><i class="fa-solid fa-trash"></i></button>
                 </div>
             </div>
+            
             <h2 class="category-name"></h2>
-            <div class="category-code"></div>
+            <span class="category-uri-tag"></span>
             <p class="category-description"></p>
-            <div class="category-footer">
-                <span class="category-items">Status: Live</span>
-                <span class="view-details" style="cursor: pointer;">Manage <i class="fa-solid fa-arrow-right"></i></span>
-            </div>
         </div>
-    </template>
 
-    <template id="addCategoryTemplate">
-        <div class="add-category-card">
-            <div class="add-icon"><i class="fa-solid fa-plus"></i></div>
-            <h3>Add Data</h3>
-            <p>Upload a new CSV to populate categories.</p>
+        <div class="category-card-footer">
+            <span class="category-item-count">
+                <i class="fa-solid fa-circle-question"></i> <span class="count-slot">0</span> Items
+            </span>
+            <span class="view-details">
+                View Details <i class="fa-solid fa-arrow-right"></i>
+            </span>
         </div>
-    </template>
+    </div>
+</template>
+
+<template id="addCategoryTemplate">
+    <div class="add-category-card">
+        <div class="add-icon-wrapper">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+        <h3>Create New Category</h3>
+        <p>Define a new subject area or specialization for review.</p>
+    </div>
+</template>
 
 </body>
 </html>
