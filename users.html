@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Users - LET Reviewer</title>
-    
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script src="assets/js/supabase.js" defer></script>
-    
     <script src="assets/js/users.js" defer></script>
     <script src="assets/js/modals.js" defer></script>
     <script src="assets/js/logout.js" defer></script>
@@ -19,14 +16,12 @@
 <body>
 
 <div class="dashboard-layout">
-    
     <aside class="sidebar">
         <div>
             <div class="sidebar-logo">
-                <div style="width: 42px; height: 42px; background: #FDE68A; border: 2px solid #111827; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 20px; box-shadow: 2px 2px 0px #111827;">📖</div>
-                <span style="font-weight: 900; font-size: 22px; color: #111827; letter-spacing: -0.5px;">LETReviewer</span>
-            </div>
-
+    <div style="width: 42px; height: 42px; background: #FDE68A; border: 2px solid #111827; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 20px; box-shadow: 2px 2px 0px #111827;">📖</div>
+    <span style="font-weight: 900; font-size: 22px; color: #111827; letter-spacing: -0.5px;">LETReviewer</span>
+</div>
             <nav>
                 <a href="dashboard.html" class="menu-item"><i class="fa-solid fa-table-cells-large"></i> Overview</a>
                 <a href="questions.html" class="menu-item"><i class="fa-solid fa-circle-question"></i> Questions</a>
@@ -34,12 +29,11 @@
                 <a href="users.html" class="menu-item active"><i class="fa-solid fa-users"></i> Users</a>
             </nav>
         </div>
-        <a href="#" id="logoutBtn" class="menu-item" style="color: #EF4444; font-weight: 700;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        <a href="#" id="logoutBtn" class="menu-item btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
     </aside>
 
     <main class="dashboard-main">
-        <div class="questions-page" style="padding: 0;">
-            
+        <div class="questions-page">
             <div class="questions-header">
                 <div>
                     <h1 class="questions-title">Users</h1>
@@ -50,7 +44,7 @@
                 </button>
             </div>
 
-            <div class="question-table-header" style="grid-template-columns: 2fr 1fr 1fr 1fr;">
+            <div class="question-table-header user-table-grid">
                 <div>User Email</div>
                 <div>Role</div>
                 <div>Status</div>
@@ -58,40 +52,59 @@
             </div>
 
             <div id="usersContainer">
-                <div style="padding: 20px; text-align: center;">Loading users...</div>
+                <div class="loading-state">Loading users...</div>
             </div>
-
         </div>
     </main>
 </div>
 
-<div id="addUserModal" class="modal-overlay" style="display: none;">
+<template id="userRowTemplate">
+    <div class="user-row">
+        <div>
+            <span class="user-email-text"></span>
+            <span class="user-you-badge hidden">(You)</span>
+        </div>
+        <div>
+            <span class="role-badge"></span>
+        </div>
+        <div>
+            <span class="status-text">
+                <i class="status-icon fa-solid"></i> <span class="status-label"></span>
+            </span>
+        </div>
+        <div class="action-cell">
+            <button class="delete-user-btn"><i class="fa-solid fa-trash"></i></button>
+        </div>
+    </div>
+</template>
+
+<div id="addUserModal" class="modal-overlay hidden">
     <div class="modal-content neo-brutal-modal">
-        <div class="modal-header" style="background: #C4B5FD;">
+        <div class="modal-header purple">
             <h3><i class="fa-solid fa-user-plus"></i> Create New Account</h3>
             <button class="close-modal-btn" id="closeAddUserBtn">&times;</button>
         </div>
         <form id="addUserForm">
-            <div class="modal-body" style="display: flex; flex-direction: column; gap: 15px;">
+            <div class="modal-body form-stack">
                 <div>
-                    <label style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 5px;">Email Address</label>
-                    <input type="email" id="newEmail" required style="width: 100%; padding: 10px; border: 2px solid #111827; border-radius: 6px; font-family: inherit;">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="newEmail" class="form-input" required>
                 </div>
                 <div>
-                    <label style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 5px;">Password (Min 6 characters)</label>
-                    <input type="password" id="newPassword" required minlength="6" style="width: 100%; padding: 10px; border: 2px solid #111827; border-radius: 6px; font-family: inherit;">
+                    <label class="form-label">Password (Min 6 chars)</label>
+                    <input type="password" id="newPassword" class="form-input" required minlength="6">
                 </div>
                 <div>
-                    <label style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 5px;">Account Role</label>
-                    <select id="newRole" style="width: 100%; padding: 10px; border: 2px solid #111827; border-radius: 6px; font-family: inherit; font-weight: bold;">
+                    <label class="form-label">Account Role</label>
+                    <select id="newRole" class="form-input">
                         <option value="student">Student</option>
                         <option value="teacher">Teacher (Admin)</option>
                     </select>
                 </div>
             </div>
-            <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px;">
-                <button type="button" class="neo-button" id="cancelAddUserBtn" style="background: #E5E7EB; color: #111827; width: auto; padding: 10px 20px;">Cancel</button>
-                <button type="submit" class="neo-button" style="background: #10B981; color: #FFFFFF; width: auto; padding: 10px 20px;">Create Account</button>
+            <div class="modal-footer modal-footer-actions">
+                <button type="button" class="btn-cancel" id="cancelAddUserBtn">Cancel</button>
+                <button type="submit" class="btn-confirm">Create Account</button>
             </div>
         </form>
     </div>
