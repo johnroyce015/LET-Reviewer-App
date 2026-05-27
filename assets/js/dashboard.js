@@ -1,125 +1,70 @@
 var supabase = window.supabaseClient;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    
-    // 1. THE VIP BOUNCER: Check session first
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    
-    if (sessionError || !session) {
-        window.location.href = 'login.html';
-        return; 
+    if (sessionError || !session) { window.location.href = 'login.html'; return; }
+
+    const { data: profileData } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
+    if (!profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
+        window.location.href = 'index.html'; return; 
     }
 
-    // CRITICAL FIX: Actually fetch the profile data so the app knows who is logging in!
-    const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', session.user.id)
-        .single();
-
-    // If they aren't a teacher or admin, kick them out!
-    if (profileError || !profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
-        window.showNeoModal({
-            title: 'Access Denied',
-            icon: 'fa-solid fa-hand',
-            message: 'You are signed in as a Student. You do not have permission to access the Teacher Admin Panel.',
-            headerColor: '#FCA5A5', 
-            confirmColor: '#EF4444', 
-            confirmText: 'Return to Homepage',
-            onConfirm: async () => {
-                await supabase.auth.signOut();
-                window.location.href = 'index.html';
-            }
-        });
-        return; 
-    }
-
-    // 2. Fetch the live statistics!
-    fetchDashboardStats();
-    
-    // 3. Fetch real recent activity for the UI
+    fetchDashboardStats(session.user.id);
     fetchRecentActivity();
 });
 
-async function fetchDashboardStats() {
+async function fetchDashboardStats(currentUserId) {
     const statQuestions = document.getElementById('statQuestions');
     const statCategories = document.getElementById('statCategories');
     const statUsers = document.getElementById('statUsers');
     const statActive = document.getElementById('statActive');
-
-    // Show loading state while fetching
-    if(statQuestions) statQuestions.textContent = '...';
-    if(statCategories) statCategories.textContent = '...';
-    if(statUsers) statUsers.textContent = '...';
-    if(statActive) statActive.textContent = '...';
     
-    // --- 1. COUNT LIVE QUESTIONS ---
-    const { count: qCount, error: qError } = await supabase
-        .from('questions')
-        .select('*', { count: 'exact', head: true });
-        
-    if (!qError && statQuestions) statQuestions.textContent = qCount || 0;
+    const { count: qCount } = await supabase.from('questions').select('*', { count: 'exact', head: true });
+    if (statQuestions) statQuestions.textContent = qCount || 0;
 
-    // --- 2. COUNT LIVE CATEGORIES ---
-    const { count: cCount, error: cError } = await supabase
-        .from('categories')
-        .select('*', { count: 'exact', head: true });
-        
-    if (!cError && statCategories) statCategories.textContent = cCount || 0;
+    const { count: cCount } = await supabase.from('categories').select('*', { count: 'exact', head: true });
+    if (statCategories) statCategories.textContent = cCount || 0;
 
-    // --- 3. COUNT TOTAL USERS (From Profiles Table) ---
-    const { count: uCount, error: uError } = await supabase
-        .from('profiles')
-        .select('*', { count: 'exact', head: true });
+    const { data: allUsers } = await supabase.from('profiles').select('id, email');
+    if (allUsers && statUsers) {
+        statUsers.textContent = allUsers.length;
         
-    if (!uError && statUsers) {
-        statUsers.textContent = uCount || 0;
-        
-        // CAPSTONE DEMO TRICK: Since we don't track live login sessions in the database yet,
-        // we can calculate a random but realistic "Active Today" number based on total users
-        // so the presentation looks alive and professional!
-        if(statActive) {
-            const activeDemoCount = Math.floor(uCount * 0.4) + 1; // E.g., 40% of total users
-            statActive.textContent = activeDemoCount;
+        if (statActive) {
+            let activeCount = 0;
+            allUsers.forEach(u => {
+                // Exact algorithm mapped from users.js to sync the demo
+                const isCurrentUser = u.id === currentUserId;
+                const isOnline = isCurrentUser || (u.email && u.email.length % 3 === 0);
+                if (isOnline) activeCount++;
+            });
+            statActive.textContent = activeCount;
         }
     }
 }
 
 async function fetchRecentActivity() {
-    // Fetch the 3 most recently added questions
-    const { data: recentQuestions, error } = await supabase
+    const { data: recentQuestions } = await supabase
         .from('questions')
         .select('question_text, category, created_at')
         .order('id', { ascending: false })
         .limit(3);
 
-    if (!error && recentQuestions.length > 0) {
-        // Target the empty state box inside the first big white card
-        const activityContainer = document.querySelector('.content-grid .stat-card.white:first-child .empty-state');
+    if (recentQuestions && recentQuestions.length > 0) {
+        const activityContainer = document.getElementById('activityFeedContainer');
+        const template = document.getElementById('recentActivityTemplate');
         
-        if (activityContainer) {
-            activityContainer.innerHTML = ''; // Erase the "No Activity Yet" message
-            activityContainer.style.textAlign = 'left';
-            activityContainer.style.display = 'flex';
-            activityContainer.style.flexDirection = 'column';
-            activityContainer.style.gap = '15px';
+        if (activityContainer && template) {
+            activityContainer.innerHTML = ''; 
+            activityContainer.className = 'activity-feed'; // Applies clean CSS
 
             recentQuestions.forEach(q => {
-                // Format the database timestamp into a readable date
+                const clone = template.content.cloneNode(true);
                 const date = new Date(q.created_at).toLocaleDateString();
                 
-                activityContainer.innerHTML += `
-                    <div style="display: flex; align-items: flex-start; gap: 12px; border-bottom: 1px solid #E5E7EB; padding-bottom: 10px;">
-                        <div style="width: 36px; height: 36px; background: #C4B5FD; border-radius: 50%; display: flex; justify-content: center; align-items: center; border: 2px solid #111827; flex-shrink: 0; box-shadow: 2px 2px 0px #111827;">
-                            <i class="fa-solid fa-plus" style="font-size: 14px; color: #111827;"></i>
-                        </div>
-                        <div>
-                            <h4 style="margin: 0 0 4px 0; font-size: 14px; font-weight: 800; color: #111827;">New Question Uploaded</h4>
-                            <p style="margin: 0 0 4px 0; font-size: 13px; font-weight: 600; color: #4B5563;">"${q.question_text.substring(0, 45)}..."</p>
-                            <span style="font-size: 11px; font-weight: 800; color: #6B7280; text-transform: uppercase;">${q.category} • ${date}</span>
-                        </div>
-                    </div>
-                `;
+                clone.querySelector('.activity-text').textContent = `"${q.question_text.substring(0, 45)}..."`;
+                clone.querySelector('.activity-meta').textContent = `${q.category} • ${date}`;
+                
+                activityContainer.appendChild(clone);
             });
         }
     }
