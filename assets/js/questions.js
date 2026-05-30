@@ -1,64 +1,112 @@
 var supabase = window.supabaseClient;
 
+let allQuestions = []; 
+
 document.addEventListener('DOMContentLoaded', async () => {
     
-    // 1. THE VIP BOUNCER: Check session AND role
+    // 1. VIP BOUNCER
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    
-    if (sessionError || !session) {
-        window.location.href = 'login.html';
-        return; 
-    }
+    if (sessionError || !session) { window.location.href = 'login.html'; return; }
 
-    // FETCH THE PROFILE DATA (This was missing!)
-    const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', session.user.id)
-        .single();
-
-    // If they aren't a teacher or admin, kick them out!
+    const { data: profileData, error: profileError } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
     if (profileError || !profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
-        window.showNeoModal({
-            title: 'Access Denied',
-            icon: 'fa-solid fa-hand',
-            message: 'You are signed in as a Student. You do not have permission to access the Teacher Admin Panel.',
-            headerColor: '#FCA5A5', 
-            confirmColor: '#EF4444', 
-            confirmText: 'Return to Homepage',
-            onConfirm: async () => {
-                await supabase.auth.signOut();
-                window.location.href = 'index.html';
-            }
-        });
-        return; 
+        window.location.href = 'index.html'; return; 
     }
 
-    // 2. Fetch Questions
-    fetchLiveQuestions();
+    // 2. Fetch data from DB
+    await fetchLiveQuestions();
+
+    // 3. Search and Filter Event Listeners
+    document.getElementById('searchInput').addEventListener('input', filterQuestions);
+    document.getElementById('categoryFilter').addEventListener('change', filterQuestions);
+
+    // 4. Edit Modal Controls
+    const editModal = document.getElementById('editQuestionModal');
+    
+    document.getElementById('cancelEditQBtn').addEventListener('click', () => {
+        editModal.classList.add('hidden');
+    });
+
+    document.getElementById('editQuestionForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('editQId').value;
+        const qText = document.getElementById('editQText').value;
+        const optA = document.getElementById('editOptA').value;
+        const optB = document.getElementById('editOptB').value;
+        const optC = document.getElementById('editOptC').value;
+        const optD = document.getElementById('editOptD').value;
+        const correct = document.getElementById('editQCorrect').value;
+
+        const { error } = await supabase.from('questions').update({
+            question_text: qText,
+            option_a: optA,
+            option_b: optB,
+            option_c: optC,
+            option_d: optD,
+            correct_answer: correct
+        }).eq('id', id);
+
+        if (error) {
+            window.showNeoModal({ title: 'Update Failed', message: error.message, headerColor: '#FCA5A5' });
+        } else {
+            editModal.classList.add('hidden');
+            await fetchLiveQuestions(); // Refresh live data
+        }
+    });
 });
+
+// --- CORE FUNCTIONS ---
 
 async function fetchLiveQuestions() {
     const container = document.getElementById('questionsContainer');
+    container.innerHTML = '<div class="loading-state">Loading questions...</div>';
     
-    const { data: questions, error } = await supabase
-        .from('questions')
-        .select('*')
-        .order('id', { ascending: false });
+    const { data, error } = await supabase.from('questions').select('*').order('id', { ascending: false });
 
     if (error) {
-        container.innerHTML = `<div style="color: red; padding: 20px;">Error loading questions: ${error.message}</div>`;
+        container.innerHTML = `<div class="loading-state">Error loading questions: ${error.message}</div>`;
         return;
     }
 
-    if (questions.length === 0) {
-        container.innerHTML = `<div style="padding: 20px; font-weight: bold;">No questions found. Time to upload some!</div>`;
+    allQuestions = data; 
+    populateCategoryDropdown(); 
+    filterQuestions(); 
+}
+
+function populateCategoryDropdown() {
+    const filter = document.getElementById('categoryFilter');
+    const uniqueCategories = [...new Set(allQuestions.map(q => q.category))].filter(Boolean);
+    
+    filter.innerHTML = '<option value="All">All Categories</option>';
+    uniqueCategories.forEach(cat => {
+        filter.innerHTML += `<option value="${cat}">${cat}</option>`;
+    });
+}
+
+function filterQuestions() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const selectedCat = document.getElementById('categoryFilter').value;
+
+    const filtered = allQuestions.filter(q => {
+        const matchesSearch = q.question_text.toLowerCase().includes(searchTerm);
+        const matchesCat = selectedCat === 'All' || q.category === selectedCat;
+        return matchesSearch && matchesCat;
+    });
+
+    renderQuestions(filtered);
+}
+
+function renderQuestions(questionsArray) {
+    const container = document.getElementById('questionsContainer');
+    
+    if (questionsArray.length === 0) {
+        container.innerHTML = `<div class="loading-state">No matching questions found.</div>`;
         return;
     }
 
     container.innerHTML = ''; 
 
-    questions.forEach(q => {
+    questionsArray.forEach(q => {
         const isA = q.correct_answer === 'A' ? 'correct' : '';
         const isB = q.correct_answer === 'B' ? 'correct' : '';
         const isC = q.correct_answer === 'C' ? 'correct' : '';
@@ -71,6 +119,7 @@ async function fetchLiveQuestions() {
 
         const card = document.createElement('div');
         card.className = 'question-card';
+        
         card.innerHTML = `
             <div class="question-info">
                 <h3>${q.question_text}</h3>
@@ -82,10 +131,11 @@ async function fetchLiveQuestions() {
                 </div>
             </div>
             <div><span class="category-badge ${catColor}">${q.category}</span></div>
-            <div><span class="difficulty-badge medium">Standard</span></div>
-            <div style="font-weight: 700; color: #10B981;">Active</div>
             <div class="action-buttons">
-                <button class="action-btn" onclick="deleteQuestion(${q.id})" style="color: #EF4444;" title="Delete">
+                <button class="action-btn edit-btn" onclick="openEditModal(${q.id})" title="Edit">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="action-btn delete-btn" onclick="deleteQuestion(${q.id})" title="Delete">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </div>
@@ -94,7 +144,23 @@ async function fetchLiveQuestions() {
     });
 }
 
-// Delete Functionality (Now using your custom Modal!)
+// Edit Modal Trigger
+window.openEditModal = function(id) {
+    const q = allQuestions.find(x => x.id === id);
+    if (!q) return;
+
+    document.getElementById('editQId').value = q.id;
+    document.getElementById('editQText').value = q.question_text;
+    document.getElementById('editOptA').value = q.option_a;
+    document.getElementById('editOptB').value = q.option_b;
+    document.getElementById('editOptC').value = q.option_c;
+    document.getElementById('editOptD').value = q.option_d;
+    document.getElementById('editQCorrect').value = q.correct_answer;
+
+    document.getElementById('editQuestionModal').classList.remove('hidden');
+};
+
+// Delete Logic
 window.deleteQuestion = async function(id) {
     window.showNeoModal({
         title: 'Confirm Deletion',
@@ -109,7 +175,7 @@ window.deleteQuestion = async function(id) {
             if(!error) {
                 fetchLiveQuestions(); 
             } else {
-                alert("Error deleting: " + error.message);
+                window.showNeoModal({ title: 'Error', message: error.message, headerColor: '#FCA5A5' });
             }
         }
     });

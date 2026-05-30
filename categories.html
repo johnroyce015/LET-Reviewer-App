@@ -10,10 +10,10 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
-    <script src="assets/js/supabase.js?" defer></script>
-    <script src="assets/js/categories.js?" defer></script>
-    <script src="assets/js/modals.js?" defer></script>
-    <script src="assets/js/logout.js?" defer></script>
+    <script src="assets/js/supabase.js" defer></script>
+    <script src="assets/js/categories.js" defer></script>
+    <script src="assets/js/modals.js" defer></script>
+    <script src="assets/js/logout.js" defer></script>
 </head>
 <body>
 
@@ -22,17 +22,18 @@
     <aside class="sidebar">
         <div>
             <div class="sidebar-logo">
-                <div style="width: 42px; height: 42px; background: #FDE68A; border: 2px solid #111827; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 20px; box-shadow: 2px 2px 0px #111827;">📖</div>
-                <span style="font-weight: 900; font-size: 22px; color: #111827; letter-spacing: -0.5px;">LETReviewer</span>
+                <div class="logo-icon">📖</div>
+                <span class="logo-text">LETReviewer</span>
             </div>
             <nav>
                 <a href="dashboard.html" class="menu-item"><i class="fa-solid fa-table-cells-large"></i> Overview</a>
                 <a href="questions.html" class="menu-item"><i class="fa-solid fa-circle-question"></i> Questions</a>
                 <a href="categories.html" class="menu-item active"><i class="fa-solid fa-layer-group"></i> Categories</a>
                 <a href="users.html" class="menu-item"><i class="fa-solid fa-users"></i> Users</a>
+                <a href="activity.html" class="menu-item"><i class="fa-solid fa-clipboard-list"></i> Activity Log</a>
             </nav>
         </div>
-        <a href="#" id="logoutBtn" class="menu-item" style="color: #EF4444; font-weight: 700;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        <a href="#" id="logoutBtn" class="menu-item btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
     </aside>
 
     <main class="dashboard-main">
@@ -46,9 +47,6 @@
             <div class="header-actions">
                 <button onclick="window.location.href='bulk-upload.html'" class="neo-button btn-bulk-upload">
                     <i class="fa-solid fa-file-import"></i> Bulk Upload
-                </button>
-                <button id="newCategoryActionBtn" class="neo-button btn-new-category">
-                    <i class="fa-solid fa-plus"></i> New category
                 </button>
             </div>
         </div>
@@ -83,9 +81,6 @@
             <span class="category-item-count">
                 <i class="fa-solid fa-circle-question"></i> <span class="count-slot">0</span> Items
             </span>
-            <span class="view-details">
-                View Details <i class="fa-solid fa-arrow-right"></i>
-            </span>
         </div>
     </div>
 </template>
@@ -99,6 +94,46 @@
         <p>Define a new subject area or specialization for review.</p>
     </div>
 </template>
+
+<div id="addCategoryModal" class="modal-overlay hidden">
+    <div class="modal-content neo-brutal-modal" style="max-width: 500px;">
+        <div class="modal-header" style="background: #FDE68A;"> <h3><i class="fa-solid fa-plus"></i> Create New Category</h3>
+        </div>
+        <form id="addCategoryForm">
+            <div class="modal-body form-stack">
+                <div class="neo-form-group">
+                    <label class="neo-label">Category Name</label>
+                    <input type="text" id="newCategoryName" class="neo-input" placeholder="e.g., Physical Education" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" id="cancelAddCategoryBtn">Cancel</button>
+                <button type="submit" class="btn-confirm">Create Category</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="editCategoryModal" class="modal-overlay hidden">
+    <div class="modal-content neo-brutal-modal">
+        <div class="modal-header" style="background: #C4B5FD;">
+            <h3><i class="fa-solid fa-pen"></i> Edit Category</h3>
+        </div>
+        <form id="editCategoryForm">
+            <input type="hidden" id="editCategoryId">
+            <div class="modal-body form-stack">
+                <div class="neo-form-group">
+                    <label class="neo-label">Category Name</label>
+                    <input type="text" id="editCategoryName" class="neo-input" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" id="cancelEditCategoryBtn">Cancel</button>
+                <button type="submit" class="btn-confirm">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 </body>
 </html>

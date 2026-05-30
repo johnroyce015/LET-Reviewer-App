@@ -1,75 +1,117 @@
-/* --- NEO-BRUTALIST MODAL --- */
+/* --- NEO-BRUTALIST MODAL OVERLAY --- */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(17, 24, 39, 0.6); 
-    backdrop-filter: blur(4px); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(17, 24, 39, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 
 .neo-brutal-modal {
-    background: #FFFFFF;
-    border: 3px solid #111827;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 420px;
-    box-shadow: 8px 8px 0px #111827;
-    overflow: hidden;
-    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: #ffffff;
+  border: 3px solid #111827;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 8px 8px 0px #111827;
+  overflow: hidden;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* --- MODAL STRUCTURE --- */
 .modal-header {
-    background: #FEE2E2; 
-    border-bottom: 3px solid #111827;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  border-bottom: 3px solid #111827;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
 }
 
 .modal-header h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 800;
-    color: #111827;
-}
-
-.close-modal-btn {
-    background: none;
-    border: none;
-    font-size: 28px;
-    font-weight: bold;
-    color: #111827;
-    cursor: pointer;
-    line-height: 1;
-}
-
-.close-modal-btn:hover {
-    color: #EF4444;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .modal-body {
-    padding: 25px 20px;
-    font-size: 16px;
-    color: #374151;
-    font-weight: 500;
-    line-height: 1.5;
+  padding: 25px 20px;
+}
+
+.modal-body p {
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+  line-height: 1.5;
 }
 
 .modal-footer {
-    padding: 15px 20px;
-    border-top: 3px solid #111827;
-    background: #F9FAFB;
-    text-align: right;
+  padding: 15px 20px;
+  border-top: 3px solid #111827;
+  background: #f9fafb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
 }
 
+/* --- RESTORED THICK MODAL BUTTONS (WITH EXPLICIT COLORS) --- */
+.btn-cancel {
+  background: #e5e7eb !important; /* Forces Neutral Gray */
+  color: #111827 !important;
+  border: 2px solid #111827;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px #111827;
+  transition: 0.1s ease;
+  font-family: inherit;
+}
+
+.btn-cancel:hover {
+  background: #d1d5db !important;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #111827;
+}
+
+.btn-confirm {
+  background: #c4b5fd; /* Default Purple */
+  color: #111827;
+  border: 2px solid #111827;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px #111827;
+  transition: 0.1s ease;
+  font-family: inherit;
+}
+
+.btn-confirm:hover {
+  background: #a78bfa;
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #111827;
+}
+
+/* --- ANIMATIONS --- */
 @keyframes popIn {
-    0% { transform: scale(0.9); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

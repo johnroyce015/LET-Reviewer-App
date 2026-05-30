@@ -1,144 +1,83 @@
 /* ====================================
    USERS PAGE (Strict CSS)
 ==================================== */
-.users-page {
-  padding: 0;
-}
-.hidden {
-  display: none !important;
-}
+.users-page { padding: 0; }
+.hidden { display: none !important; }
 
-/* Grid Layouts */
-.user-table-grid {
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+/* 5 Column Grid Layouts */
+.user-table-grid { 
+    display: grid;
+    grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr;
+    padding: 15px 20px;
+    background: #FDE68A; 
+    border: 3px solid #111827;
+    border-radius: 12px 12px 0 0;
+    font-weight: 800;
+    margin-top: 20px;
+    border-bottom: 2px solid #111827; 
 }
 
 .user-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  padding: 15px 20px;
-  border-bottom: 2px solid var(--brutal-black, #111827);
-  align-items: center;
-  background: #ffffff;
-  font-weight: 500;
+    display: grid; 
+    grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr; 
+    padding: 15px 20px; 
+    border-left: 3px solid #111827;
+    border-right: 3px solid #111827;
+    border-bottom: 2px solid #111827; 
+    align-items: center; 
+    background: #FFFFFF; 
+    font-weight: 500;
+}
+
+.user-row:last-child {
+    border-bottom: 3px solid #111827;
+    border-radius: 0 0 12px 12px;
 }
 
 /* User Info */
-.user-email-text {
-  font-weight: 700;
-  color: #111827;
-}
-.user-you-badge {
-  color: #7c3aed;
-  font-size: 12px;
-  margin-left: 5px;
-  font-weight: 800;
-}
+.user-name-text { font-weight: 900; color: #111827; }
+.user-email-text { font-weight: 700; color: #111827; }
+.user-you-badge { color: #7C3AED; font-size: 12px; margin-left: 5px; font-weight: 800; }
 
 /* Role Badges */
 .role-badge {
-  color: #111827;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 800;
-  border: 2px solid #111827;
+    color: #111827; 
+    padding: 4px 10px; 
+    border-radius: 6px; 
+    font-size: 12px; 
+    font-weight: 800; 
+    border: 2px solid #111827;
 }
-.role-teacher {
-  background: #c4b5fd;
-}
-.role-student {
-  background: #fde68a;
-}
+.role-teacher { background: #C4B5FD; }
+.role-student { background: #FDE68A; }
 
 /* Status Badges */
-.status-text {
-  font-weight: bold;
-}
-.status-online {
-  color: #10b981;
-}
-.status-offline {
-  color: #9ca3af;
-}
+.status-text { font-weight: bold; }
+.status-online { color: #10B981; }
+.status-offline { color: #9CA3AF; }
 
 /* Action Buttons */
-.action-cell {
-  display: flex;
-  gap: 10px;
-}
+.action-cell { display: flex; gap: 10px; }
 .delete-user-btn {
-  border-radius: 6px;
-  width: 36px;
-  height: 36px;
-  border: 2px solid #111827;
-  background: #ffffff;
-  font-size: 13px;
-  transition: 0.2s ease;
-  cursor: pointer;
+    border-radius: 6px; 
+    width: 36px; 
+    height: 36px; 
+    border: 2px solid #111827;
+    background: #FFFFFF;
+    font-size: 13px;
+    transition: 0.2s ease;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.delete-user-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
+.delete-user-btn:hover:not(:disabled) { 
+    transform: translateY(-2px); 
+    box-shadow: 2px 2px 0 #111827; 
 }
-.active-trash {
-  color: #ef4444;
-}
-.disabled-trash {
-  color: #9ca3af;
-  cursor: not-allowed;
-}
-
-/* Clean Modal Styles */
-.modal-header.purple {
-  background: #c4b5fd;
-}
-.form-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-.form-label {
-  font-weight: bold;
-  font-size: 14px;
-  display: block;
-  margin-bottom: 5px;
-}
-.form-input {
-  width: 100%;
-  padding: 10px;
-  border: 2px solid #111827;
-  border-radius: 6px;
-  font-family: inherit;
-  font-weight: bold;
-}
-.modal-footer-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-.btn-cancel {
-  background: #e5e7eb;
-  color: #111827;
-  width: auto;
-  padding: 10px 20px;
-  border: 2px solid #111827;
-  font-weight: bold;
-  cursor: pointer;
-}
-.btn-confirm {
-  background: #10b981;
-  color: #ffffff;
-  width: auto;
-  padding: 10px 20px;
-  border: 2px solid #111827;
-  font-weight: bold;
-  cursor: pointer;
-}
+.active-trash { color: #EF4444; }
+.disabled-trash { color: #9CA3AF; cursor: not-allowed; opacity: 0.6; }
 
 @media (max-width: 950px) {
-  .user-table-grid,
-  .user-row {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
+    .user-table-grid, .user-row { grid-template-columns: 1fr; gap: 10px; }
 }

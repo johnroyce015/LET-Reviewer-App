@@ -10,10 +10,52 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'index.html'; return;
     }
 
-    // Bind layout helper modal logic to header secondary action
-    const newCatBtn = document.getElementById('newCategoryActionBtn');
-    if(newCatBtn) {
-        newCatBtn.addEventListener('click', () => triggerComingSoonModal());
+    // 2. SETUP ADD MODAL LOGIC
+    const addModal = document.getElementById('addCategoryModal');
+    if (addModal) {
+        document.getElementById('cancelAddCategoryBtn').addEventListener('click', () => {
+            addModal.classList.add('hidden');
+            document.getElementById('addCategoryForm').reset(); // Clear the input
+        });
+
+        document.getElementById('addCategoryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newName = document.getElementById('newCategoryName').value;
+
+            // Send the new category to Supabase
+            const { error } = await supabase.from('categories').insert([{ category_name: newName }]);
+
+            if (error) {
+                window.showNeoModal({ title: 'Creation Failed', icon: 'fa-solid fa-triangle-exclamation', message: error.message, headerColor: '#FCA5A5', confirmColor: '#EF4444' });
+            } else {
+                addModal.classList.add('hidden');
+                document.getElementById('addCategoryForm').reset();
+                fetchLiveCategories(); // Refresh the grid instantly!
+            }
+        });
+    }
+
+    // 3. SETUP EDIT MODAL LOGIC
+    const editModal = document.getElementById('editCategoryModal');
+    if (editModal) {
+        document.getElementById('cancelEditCategoryBtn').addEventListener('click', () => {
+            editModal.classList.add('hidden');
+        });
+
+        document.getElementById('editCategoryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editCategoryId').value;
+            const newName = document.getElementById('editCategoryName').value;
+
+            const { error } = await supabase.from('categories').update({ category_name: newName }).eq('id', id);
+
+            if (error) {
+                window.showNeoModal({ title: 'Update Failed', icon: 'fa-solid fa-triangle-exclamation', message: error.message, headerColor: '#FCA5A5', confirmColor: '#EF4444' });
+            } else {
+                editModal.classList.add('hidden');
+                fetchLiveCategories(); 
+            }
+        });
     }
 
     fetchLiveCategories();
@@ -24,7 +66,7 @@ async function fetchLiveCategories() {
     const cardTemplate = document.getElementById('categoryCardTemplate');
     const addTemplate = document.getElementById('addCategoryTemplate');
 
-    const { data: categories, error } = await supabase.from('categories').select('*');
+    const { data: categories, error } = await supabase.from('categories').select('*').order('created_at', { ascending: true });
 
     if (error) {
         container.textContent = `Error loading items: ${error.message}`;
@@ -32,64 +74,62 @@ async function fetchLiveCategories() {
     }
 
     container.innerHTML = ''; 
-    
-    // Instead of raw colors, we assign the CSS classes we built in categories.css!
     const themeClasses = ['theme-purple', 'theme-yellow', 'theme-green', 'theme-red']; 
 
-    categories.forEach((cat, index) => {
+    for (let index = 0; index < categories.length; index++) {
+        const cat = categories[index];
         const currentTheme = themeClasses[index % themeClasses.length];
         const clone = cardTemplate.content.cloneNode(true);
         
-        // Add the color class from the CSS file
         const cardWrapper = clone.querySelector('.category-card');
         cardWrapper.classList.add(currentTheme);
 
-        // Clean value assignment (Pure textNode isolation)
         clone.querySelector('.category-name').textContent = cat.category_name;
         
-        // Dynamically compute URI matching mockup labels (e.g., /gen-ed)
         const URLSlug = cat.category_name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
         clone.querySelector('.category-uri-tag').textContent = `/${URLSlug}`;
         
         clone.querySelector('.category-description').textContent = `Foundational materials and practice test vectors explicitly curated for comprehensive ${cat.category_name} review segments.`;
 
-        // Mock counts mapped gracefully to prevent flat text layouts
-        const sampleMockCounts = ['1,240', '850', '420', '110'];
-        clone.querySelector('.count-slot').textContent = sampleMockCounts[index % sampleMockCounts.length];
+        // The live count from questions table
+        const { count } = await supabase
+            .from('questions')
+            .select('*', { count: 'exact', head: true })
+            .eq('category', cat.category_name);
 
-        // Action bindings
-        clone.querySelector('.edit-card-square').onclick = () => triggerComingSoonModal();
-        clone.querySelector('.delete-card-square').onclick = () => deleteCategory(cat.id);
+        clone.querySelector('.count-slot').textContent = count || 0;
+
+        // Edit button logic
+        clone.querySelector('.edit-card-square').onclick = () => {
+            document.getElementById('editCategoryId').value = cat.id;
+            document.getElementById('editCategoryName').value = cat.category_name;
+            document.getElementById('editCategoryModal').classList.remove('hidden');
+        };
+
+        // Delete button logic
+        clone.querySelector('.delete-card-square').onclick = () => deleteCategory(cat.id, cat.category_name);
         
-        // Details split redirect
-        const triggerDetails = clone.querySelector('.view-details');
-        triggerDetails.onclick = () => { window.location.href = 'questions.html'; };
-
         container.appendChild(clone);
-    });
+    }
 
-    // Append beautiful dotted placeholder matching final element slots
-    const addClone = addTemplate.content.cloneNode(true);
-    const addTarget = addClone.querySelector('.add-category-card');
-    addTarget.onclick = () => { window.location.href = 'bulk-upload.html'; };
-    container.appendChild(addClone);
+    // Append dotted placeholder and wire it to the ADD MODAL!
+    if (addTemplate) {
+        const addClone = addTemplate.content.cloneNode(true);
+        const addTarget = addClone.querySelector('.add-category-card');
+        
+        addTarget.onclick = () => { 
+            document.getElementById('addCategoryModal').classList.remove('hidden'); 
+        };
+        
+        container.appendChild(addClone);
+    }
 }
 
-function triggerComingSoonModal() {
-    window.showNeoModal({
-        title: 'Feature Module',
-        icon: 'fa-solid fa-screwdriver-wrench',
-        message: 'This inline modifier form option is being wired up. For now, please use the Bulk Upload suite tool!',
-        headerColor: '#C4B5FD',
-        confirmColor: '#111827'
-    });
-}
-
-window.deleteCategory = async function(id) {
+window.deleteCategory = async function(id, categoryName) {
     window.showNeoModal({
         title: 'Confirm Deletion',
         icon: 'fa-solid fa-trash',
-        message: 'Are you sure you want to delete this category card? This action cannot be undone.',
+        message: `Are you sure you want to delete the category <b>${categoryName}</b>?`,
         headerColor: '#FDE68A',
         confirmColor: '#EF4444',
         confirmText: 'Yes, Delete',

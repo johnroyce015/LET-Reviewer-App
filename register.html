@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account - LET Reviewer</title>
+    
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
@@ -12,53 +13,68 @@
     <script src="assets/js/modals.js" defer></script>
     <script src="assets/js/auth.js" defer></script>
 </head>
-<body class="neo-auth-layout" style="justify-content: center; align-items: center; background: #F3F4F6;">
+<body class="neo-auth-layout">
 
-    <div class="neo-card">
-        <div class="neo-header">
-            <div class="neo-icon">📖</div>
-            <div class="neo-header-text">
-                <h1>Create account</h1>
-                <p>Start your LET prep today</p>
+    <div class="neo-auth-left">
+        <div class="hero-content">
+            <div class="auth-logo-large">
+                <div class="logo-icon-large">📖</div>
+                <h1 class="logo-text-large">LET Reviewer</h1>
             </div>
-        </div>
-
-        <form id="registerForm">
-            <div class="neo-form-group">
-                <label class="neo-label">Full name</label>
-                <input type="text" id="regName" class="neo-input" required>
-            </div>
-
-            <div class="neo-form-group">
-                <label class="neo-label">Email</label>
-                <input type="email" id="regEmail" class="neo-input" required>
-            </div>
-
-            <div class="neo-form-group">
-                <label class="neo-label">Password</label>
-                <input type="password" id="regPassword" class="neo-input" required>
-            </div>
-
-            <div class="neo-form-group" style="margin-top: 10px;">
-                <label class="neo-label">I am a...</label>
-                <div class="neo-role-toggle">
-                    <input type="radio" id="student" name="role" value="student" checked>
-                    <label for="student" class="neo-role-label">Student</label>
-
-                    <input type="radio" id="teacher" name="role" value="teacher">
-                    <label for="teacher" class="neo-role-label">Teacher</label>
-                </div>
-            </div>
-
-            <button type="submit" class="neo-button" id="regSubmitBtn" style="background: #10B981; color: white; width: 100%; margin-top: 15px;">
-                Create account
-            </button>
-        </form>
-
-        <div class="neo-footer-link">
-            Already have an account? <a href="login.html">Sign in</a>
+            <p class="hero-tagline">Structure for Success.</p>
+            <p class="hero-sub">Organized categories lead to focused study sessions and higher passing rates for your students.</p>
         </div>
     </div>
 
+    <div class="neo-auth-right">
+        <div class="neo-card">
+            
+            <div class="neo-header">
+                <div class="neo-icon">📖</div>
+                <div class="neo-header-text">
+                    <h1>Create account</h1>
+                    <p>Start your LET prep today</p>
+                </div>
+            </div>
+
+            <form id="registerForm" class="form-stack">
+                <div class="neo-form-group">
+                    <label class="neo-label">Full name</label>
+                    <input type="text" id="regName" class="neo-input" required>
+                </div>
+
+                <div class="neo-form-group">
+                    <label class="neo-label">Email</label>
+                    <input type="email" id="regEmail" class="neo-input" required>
+                </div>
+
+                <div class="neo-form-group">
+                    <label class="neo-label">Password</label>
+                    <input type="password" id="regPassword" class="neo-input" required minlength="6">
+                </div>
+
+                <div class="neo-form-group">
+                    <label class="neo-label">I am a...</label>
+                    <div class="neo-role-toggle">
+                        <input type="radio" id="student" name="role" value="student" checked>
+                        <label for="student" class="neo-role-label">Student</label>
+
+                        <input type="radio" id="teacher" name="role" value="teacher">
+                        <label for="teacher" class="neo-role-label">Teacher</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="neo-button btn-register" id="regSubmitBtn">
+                    Create account
+                </button>
+            </form>
+
+            <div class="neo-footer-link">
+                Already have an account? <a href="login.html">Sign in</a>
+            </div>
+
+        </div>
+    </div>
+    
 </body>
 </html>

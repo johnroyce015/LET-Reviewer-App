@@ -16,25 +16,25 @@
 .questions-title {
   font-size: 48px;
   font-weight: 700;
-  color: var(--text-main);
+  color: var(--text-main, #111827);
   margin-bottom: 10px;
 }
 
 .questions-subtitle {
-  color: var(--text-muted);
+  color: var(--text-muted, #6b7280);
   font-size: 16px;
 }
 
 .filter-bar {
   width: 100%;
-  background: var(--brutal-white);
-  border: var(--border-heavy);
+  background: var(--brutal-white, #ffffff);
+  border: var(--border-heavy, 3px solid #111827);
   border-radius: 16px;
   padding: 20px;
   display: flex;
   gap: 16px;
   align-items: center;
-  box-shadow: 5px 5px 0 var(--brutal-black);
+  box-shadow: 5px 5px 0 var(--brutal-black, #111827);
   margin-bottom: 24px;
 }
 
@@ -51,29 +51,65 @@
   color: #9ca3af;
 }
 
+.search-input {
+  width: 100%;
+  padding: 12px 14px 12px 40px;
+  border: 2px solid #111827;
+  border-radius: 10px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+}
+
+.filter-select {
+  padding: 12px 14px;
+  border: 2px solid #111827;
+  border-radius: 10px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+/* CHANGED TO 3 COLUMNS */
 .question-table-header {
   width: 100%;
-  background: var(--theme-yellow);
-  border: var(--border-light);
+  background: var(--theme-yellow, #fde68a);
+  border: var(--border-light, 2px solid #111827);
   border-radius: 10px;
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 4fr 1.5fr 1fr;
   padding: 16px 18px;
   margin-bottom: 14px;
   font-weight: 700;
   color: #374151;
 }
 
+/* CHANGED TO 3 COLUMNS */
 .question-card {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 4fr 1.5fr 1fr;
   gap: 18px;
   align-items: center;
+  background: #ffffff;
+  border: 3px solid #111827;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 4px 4px 0 #111827;
 }
 
 .question-info h3 {
   font-size: 18px;
-  color: var(--text-main);
+  color: var(--text-main, #111827);
   margin-bottom: 16px;
   line-height: 1.5;
 }
@@ -89,7 +125,7 @@
   background: #ede9fe;
   border-radius: 8px;
   font-size: 13px;
-  color: var(--text-light);
+  color: var(--text-light, #4b5563);
   font-weight: 600;
 }
 
@@ -98,14 +134,13 @@
   color: #4c1d95;
 }
 
-.category-badge,
-.difficulty-badge {
+.category-badge {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: 8px 14px;
   border-radius: 20px;
-  border: var(--border-light);
+  border: var(--border-light, 2px solid #111827);
   font-size: 13px;
   font-weight: 600;
   width: fit-content;
@@ -116,26 +151,49 @@
   background: #86efac;
 }
 .math {
-  background: var(--theme-yellow);
+  background: var(--theme-yellow, #fde68a);
 }
 .english {
   background: #c4b5fd;
 }
 
-/* Difficulty Colors */
-.easy {
-  background: #6ee7b7;
-}
-.medium {
-  background: #fcd34d;
-}
-.hard {
-  background: #fca5a5;
-}
-
+/* ACTION BUTTONS */
 .action-buttons {
   display: flex;
   gap: 10px;
+}
+
+.action-btn {
+  background: #ffffff;
+  border: 2px solid #111827;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 2px 2px 0px #111827;
+  transition: 0.1s ease;
+  font-size: 13px;
+}
+
+.action-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px #111827;
+}
+
+.action-btn.edit-btn {
+  color: #111827;
+}
+.action-btn.delete-btn {
+  color: #ef4444;
+}
+
+/* Modal specific tweaks for large forms */
+#editQuestionModal .modal-body {
+  max-height: 60vh;
+  overflow-y: auto;
 }
 
 .pagination {
@@ -150,15 +208,15 @@
   min-width: 50px;
   height: 50px;
   padding: 0 18px;
-  border: var(--border-heavy);
+  border: var(--border-heavy, 3px solid #111827);
   border-radius: 10px;
-  background: var(--brutal-white);
+  background: var(--brutal-white, #ffffff);
   font-weight: 700;
   cursor: pointer;
 }
 
 .page-btn.active {
-  background: var(--theme-lavender-old);
+  background: var(--theme-lavender-old, #c4b5fd);
 }
 
 @media (max-width: 1200px) {

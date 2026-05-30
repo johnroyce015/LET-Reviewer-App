@@ -1,0 +1,102 @@
+/* ====================================
+   ACTIVITY LOG PAGE
+==================================== */
+
+.activity-page {
+    padding: 0;
+}
+
+.log-table-header {
+    width: 100%;
+    background: #FDE68A;
+    border: 3px solid #111827;
+    border-radius: 12px 12px 0 0;
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1.5fr 3fr; 
+    padding: 16px 20px;
+    font-weight: 800;
+    color: #111827;
+    margin-top: 20px;
+    border-bottom: 2px solid #111827;
+}
+
+.log-row {
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1.5fr 3fr; 
+    gap: 15px;
+    align-items: center;
+    background: #FFFFFF;
+    border-left: 3px solid #111827;
+    border-right: 3px solid #111827;
+    border-bottom: 2px solid #111827;
+    padding: 16px 20px;
+    transition: 0.1s ease;
+}
+
+.log-row:last-child {
+    border-bottom: 3px solid #111827;
+    border-radius: 0 0 12px 12px;
+}
+
+.log-row:hover {
+    background: #F9FAFB;
+}
+
+/* Typography for Logs */
+.log-time {
+    font-size: 13px;
+    font-weight: 700;
+    color: #4B5563;
+}
+
+.log-user {
+    font-size: 14px;
+    font-weight: 800;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.log-user i {
+    color: #9CA3AF;
+}
+
+.log-desc {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+/* Action Type Badges */
+.action-badge {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 2px solid #111827;
+    font-size: 11px;
+    font-weight: 900;
+    text-transform: uppercase;
+    box-shadow: 2px 2px 0px #111827;
+    width: fit-content;
+}
+
+.action-create { background: #A7F3D0; color: #111827; } /* Green */
+.action-update { background: #FDE68A; color: #111827; } /* Yellow */
+.action-delete { background: #FCA5A5; color: #111827; } /* Red */
+.action-login  { background: #E5E7EB; color: #111827; } /* Gray */
+
+@media (max-width: 950px) {
+    .log-table-header, .log-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    .log-table-header { display: none; } /* Hide headers on mobile */
+    .log-row {
+        border: 3px solid #111827;
+        border-radius: 12px !important;
+        margin-bottom: 15px;
+    }
+}
