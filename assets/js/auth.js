@@ -1,26 +1,18 @@
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // (Don't forget to paste your URL and ANON KEY here again!)
-    const supabaseUrl = 'https://hznbjmwmwokjdufbqrkm.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6bmJqbXdtd29ramR1ZmJxcmttIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MTY1ODAsImV4cCI6MjA5Mzk5MjU4MH0.ul2LPyJV1m2hfkv2qt4Qr-R6T5fGshITFAJTAa5lLsU';
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+var supabase = window.supabaseClient;
 
-    const loginForm = document.getElementById('loginForm');
+document.addEventListener('DOMContentLoaded', async () => {
     
-    // Grab the modal elements (Removed closeModalBtn)
-    const errorModal = document.getElementById('errorModal');
-    const errorMessageText = document.getElementById('errorMessageText');
-    const modalOkBtn = document.getElementById('modalOkBtn');
-
-    // Function to close the modal
-    function closeModal() {
-        errorModal.style.display = 'none';
+    // 1. Skip Login if already authenticated 
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session && window.location.pathname.includes('login.html')) {
+        window.location.href = 'dashboard.html';
+        return;
     }
 
-    // Attach click event ONLY to the "Try Again" button now
-    if(modalOkBtn) modalOkBtn.addEventListener('click', closeModal);
+    // --- HANDLE LOGIN ---
+    const loginForm = document.getElementById('loginForm');
+    const submitBtn = document.getElementById('loginSubmitBtn');
 
-    // Handle the Login process
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault(); 
@@ -28,30 +20,61 @@ document.addEventListener('DOMContentLoaded', () => {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
 
+            // Visual loading state
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...';
+            submitBtn.disabled = true;
+
             const { data, error } = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password
             });
 
             if (error) {
-                console.error("Login Failed:", error.message);
-                
-                if (error.message.includes("Invalid login credentials")) {
-                    errorMessageText.textContent = "The email or password you entered is incorrect. Please check your spelling and try again.";
-                } else {
-                    errorMessageText.textContent = error.message;
+                let errorMsg = error.message;
+                if (errorMsg.includes("Invalid login credentials")) {
+                    errorMsg = "The email or password you entered is incorrect. Please check your spelling and try again.";
                 }
                 
-                errorModal.style.display = 'flex';
+                window.showNeoModal({
+                    title: 'Login Failed',
+                    icon: 'fa-solid fa-triangle-exclamation',
+                    message: errorMsg,
+                    headerColor: '#FCA5A5',
+                    confirmColor: '#111827'
+                });
                 
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             } else {
-                window.location.href = 'dashboard.html'; 
+                
+                // VIP Bouncer Check
+                const { data: profile } = await supabase.from('profiles').select('role').eq('id', data.user.id).single();
+
+                if (profile && (profile.role === 'teacher' || profile.role === 'admin')) {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    window.showNeoModal({
+                        title: 'Access Restricted',
+                        icon: 'fa-solid fa-hand',
+                        message: 'This web dashboard is exclusively for Teachers. Students must use the mobile application to take mock exams.',
+                        headerColor: '#FCA5A5',
+                        confirmColor: '#EF4444',
+                        confirmText: 'Sign Out',
+                        onConfirm: async () => {
+                            await supabase.auth.signOut();
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.disabled = false;
+                        }
+                    });
+                }
             }
         });
     }
+
     // --- HANDLE REGISTRATION ---
     const registerForm = document.getElementById('registerForm');
-    const regMessage = document.getElementById('regMessage');
+    const regSubmitBtn = document.getElementById('regSubmitBtn');
 
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
@@ -62,31 +85,36 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = document.getElementById('regPassword').value;
             const role = document.querySelector('input[name="role"]:checked').value;
 
-            // Create the account and pass the metadata for the trigger
+            const originalRegText = regSubmitBtn.innerHTML;
+            regSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating...';
+            regSubmitBtn.disabled = true;
+
             const { data, error } = await supabase.auth.signUp({
                 email: email,
                 password: password,
-                options: {
-                    data: {
-                        full_name: name,
-                        role: role
-                    }
-                }
+                options: { data: { full_name: name, role: role } }
             });
 
             if (error) {
-                console.error("Registration Failed:", error.message);
-                regMessage.style.color = '#EF4444'; // Neo-brutalist Red
-                regMessage.textContent = error.message;
+                window.showNeoModal({
+                    title: 'Registration Failed',
+                    icon: 'fa-solid fa-triangle-exclamation',
+                    message: error.message,
+                    headerColor: '#FCA5A5',
+                    confirmColor: '#111827'
+                });
+                regSubmitBtn.innerHTML = originalRegText;
+                regSubmitBtn.disabled = false;
             } else {
-                regMessage.style.color = '#10B981'; // Neo-brutalist Green
-                regMessage.textContent = "Registration successful! You can now sign in.";
+                window.showNeoModal({
+                    title: 'Success!',
+                    icon: 'fa-solid fa-check',
+                    message: 'Registration successful! You can now sign in.',
+                    headerColor: '#A7F3D0',
+                    confirmColor: '#10B981',
+                    onConfirm: () => { window.location.href = 'login.html'; }
+                });
                 registerForm.reset();
-                
-                // Optional: Automatically redirect them to login after a second
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 1500);
             }
         });
     }

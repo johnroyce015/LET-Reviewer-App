@@ -2,53 +2,104 @@
 .neo-auth-layout {
   display: flex;
   min-height: 100vh;
-  background-color: var(--bg-auth);
+  background-color: #F3F4F6;
+  font-family: inherit;
 }
 
+/* LEFT SIDE: DOTS PATTERN (Hidden on mobile) */
 .neo-auth-left {
   flex: 1;
-  background: url("../../images/background.jpg") center/cover no-repeat;
+  background-color: #C4B5FD;
+  background-image: radial-gradient(var(--brutal-black, #111827) 2.5px, transparent 2.5px);
+  background-size: 32px 32px;
+  border-right: 4px solid var(--brutal-black, #111827);
   position: relative;
   display: none;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (min-width: 900px) {
   .neo-auth-left {
-    display: block;
+    display: flex;
   }
 }
 
-.neo-floating-badge {
-  position: absolute;
-  bottom: 40px;
-  left: 40px;
-  background: var(--brutal-white);
-  border: var(--border-light);
-  box-shadow: 6px 6px 0 var(--brutal-black);
-  border-radius: 12px;
-  padding: 24px;
-  max-width: 300px;
+/* LEFT SIDE: BRANDING BOX */
+.hero-content {
+    background: #FFFFFF;
+    border: 4px solid var(--brutal-black, #111827);
+    border-radius: 16px;
+    padding: 45px 35px;
+    box-shadow: 8px 8px 0px var(--brutal-black, #111827);
+    max-width: 450px;
+    text-align: center;
 }
 
-.neo-floating-badge h3 {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--text-main);
-  margin-bottom: 8px;
+.auth-logo-large {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
 }
 
-.neo-floating-badge p {
-  font-size: 13px;
-  color: var(--text-light);
-  line-height: 1.5;
+.logo-icon-large {
+    width: 80px;
+    height: 80px;
+    background: #FDE68A;
+    border: 4px solid #111827;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    box-shadow: 4px 4px 0px #111827;
 }
 
+.logo-text-large {
+    font-weight: 900;
+    font-size: 42px;
+    color: #111827;
+    margin: 0;
+    letter-spacing: -1px;
+}
+
+.hero-tagline {
+    font-size: 24px;
+    font-weight: 900;
+    color: #111827;
+    margin: 0 0 12px 0;
+}
+
+.hero-sub {
+    font-size: 15px;
+    font-weight: 600;
+    color: #4B5563;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* RIGHT SIDE: AUTH CARDS */
 .neo-auth-right {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
+}
+
+.neo-card {
+  width: 100%;
+  max-width: 420px;
+  background: #FFFFFF;
+  border: 3px solid var(--brutal-black, #111827);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 8px 8px 0px var(--brutal-black, #111827);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .neo-header {
@@ -62,8 +113,8 @@
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: var(--theme-yellow);
-  border: var(--border-light);
+  background: var(--theme-yellow, #FDE68A);
+  border: 2px solid var(--brutal-black, #111827);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -73,22 +124,24 @@
 .neo-header-text h1 {
   font-size: 22px;
   font-weight: 800;
-  color: var(--text-main);
+  color: var(--text-main, #111827);
+  margin: 0;
 }
 
 .neo-header-text p {
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--text-muted, #6B7280);
+  margin: 0;
 }
 
 .neo-demo-box {
-  margin-top: 24px;
+  margin-top: 10px;
   background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  border: 2px solid #e5e7eb;
   border-radius: 8px;
   padding: 16px;
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--text-muted, #6B7280);
   line-height: 1.6;
 }
 
@@ -100,13 +153,53 @@
 
 .neo-footer-link {
   text-align: center;
-  margin-top: 16px;
+  margin-top: 5px;
   font-size: 13px;
-  color: var(--text-light);
+  color: var(--text-muted, #6B7280);
 }
 
 .neo-footer-link a {
   font-weight: 700;
-  color: var(--text-main);
+  color: var(--text-main, #111827);
   text-decoration: underline;
+}
+
+/* FORM ELEMENTS */
+.neo-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.neo-label {
+    font-weight: 800;
+    font-size: 14px;
+    color: #374151;
+}
+
+.neo-input {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #111827;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+.neo-input:focus {
+    outline: none;
+    border-color: #7C3AED;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+}
+
+.neo-role-toggle {
+    display: flex;
+    gap: 15px;
+}
+
+.neo-role-label {
+    font-weight: 700;
+    cursor: pointer;
 }
