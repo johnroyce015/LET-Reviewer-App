@@ -9,11 +9,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'index.html'; return; 
     }
 
-    fetchDashboardStats(session.user.id);
+    // 1. SILENT PING: Update this user's "last_active_at" timestamp to right now!
+    await supabase.from('profiles')
+        .update({ last_active_at: new Date().toISOString() })
+        .eq('id', session.user.id);
+
+    // 2. Fetch the newly synced data
+    fetchDashboardStats();
     fetchRecentActivity();
 });
 
-async function fetchDashboardStats(currentUserId) {
+async function fetchDashboardStats() {
     const statQuestions = document.getElementById('statQuestions');
     const statCategories = document.getElementById('statCategories');
     const statUsers = document.getElementById('statUsers');
@@ -25,17 +31,21 @@ async function fetchDashboardStats(currentUserId) {
     const { count: cCount } = await supabase.from('categories').select('*', { count: 'exact', head: true });
     if (statCategories) statCategories.textContent = cCount || 0;
 
-    const { data: allUsers } = await supabase.from('profiles').select('id, email');
+    // 3. REAL ACTIVE USER TRACKING
+    const { data: allUsers } = await supabase.from('profiles').select('id, email, last_active_at');
     if (allUsers && statUsers) {
         statUsers.textContent = allUsers.length;
         
         if (statActive) {
             let activeCount = 0;
+            // Calculate what time it was exactly 24 hours ago
+            const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); 
+
             allUsers.forEach(u => {
-                // Exact algorithm mapped from users.js to sync the demo
-                const isCurrentUser = u.id === currentUserId;
-                const isOnline = isCurrentUser || (u.email && u.email.length % 3 === 0);
-                if (isOnline) activeCount++;
+                // If they have a timestamp AND it is newer than 24 hours ago, they are Active!
+                if (u.last_active_at && new Date(u.last_active_at) > twentyFourHoursAgo) {
+                    activeCount++;
+                }
             });
             statActive.textContent = activeCount;
         }
@@ -43,29 +53,39 @@ async function fetchDashboardStats(currentUserId) {
 }
 
 async function fetchRecentActivity() {
-    const { data: recentQuestions } = await supabase
-        .from('questions')
-        .select('question_text, category, created_at')
-        .order('id', { ascending: false })
-        .limit(3);
+    // 4. UNIFIED LOGS: Now querying the real activity_logs table!
+    const { data: logs } = await supabase
+        .from('activity_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(4); // Grab the 4 newest actions
 
-    if (recentQuestions && recentQuestions.length > 0) {
-        const activityContainer = document.getElementById('activityFeedContainer');
-        const template = document.getElementById('recentActivityTemplate');
-        
+    const activityContainer = document.getElementById('activityFeedContainer');
+    const template = document.getElementById('recentActivityTemplate');
+
+    if (logs && logs.length > 0) {
         if (activityContainer && template) {
             activityContainer.innerHTML = ''; 
-            activityContainer.className = 'activity-feed'; // Applies clean CSS
+            activityContainer.className = 'activity-feed'; 
 
-            recentQuestions.forEach(q => {
+            logs.forEach(log => {
                 const clone = template.content.cloneNode(true);
-                const date = new Date(q.created_at).toLocaleDateString();
                 
-                clone.querySelector('.activity-text').textContent = `"${q.question_text.substring(0, 45)}..."`;
-                clone.querySelector('.activity-meta').textContent = `${q.category} • ${date}`;
+                // Format the date nicely
+                const dateObj = new Date(log.created_at);
+                const timeString = dateObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                const dateString = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                
+                // Inject the real log data into the dashboard template
+                clone.querySelector('.activity-text').textContent = log.description;
+                clone.querySelector('.activity-meta').textContent = `${log.action_type} by ${log.user_email.split('@')[0]} • ${dateString}, ${timeString}`;
                 
                 activityContainer.appendChild(clone);
             });
+        }
+    } else {
+        if (activityContainer) {
+            activityContainer.innerHTML = '<div style="padding: 20px; color: #6B7280; font-weight: 600;">System is quiet. No recent activity.</div>';
         }
     }
 }
