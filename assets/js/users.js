@@ -28,8 +28,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('editUserForm').reset();
     });
 
-    // 2. FETCH USERS FROM DATABASE
+    // 2. FETCH USERS FROM DATABASE (WITH REAL TIMESTAMPS)
     window.loadUsers = async function() {
+        // We select all columns so we get last_active_at too!
         const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
 
         if (error || !data || data.length === 0) {
@@ -38,13 +39,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         container.innerHTML = ''; 
+        
+        // Calculate the exact time 24 hours ago
+        const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); 
 
         data.forEach(user => {
             const isCurrentUser = user.id === session.user.id;
-            const isOnline = isCurrentUser || (user.email && user.email.length % 3 === 0);
+            
+            // 🔥 REAL TRACKER LOGIC: Are they the current user, or is their timestamp within the last 24 hours?
+            const isOnline = isCurrentUser || (user.last_active_at && new Date(user.last_active_at) > twentyFourHoursAgo);
             
             const row = document.createElement('div');
-            row.className = 'user-row';
+            row.className = 'user-row'; // Keeping your original CSS class!
             
             row.innerHTML = `
                 <div class="user-name-text">${user.full_name || 'No Name Provided'}</div>
@@ -92,6 +98,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (error) {
             window.showNeoModal({ title: 'Creation Failed', icon: 'fa-solid fa-triangle-exclamation', message: error.message, headerColor: '#FCA5A5' });
         } else {
+            // 🔥 THE NEW TRACKER!
+            await window.logSystemActivity('CREATE', `Added a new ${role} account for ${email}`);
+            
             addUserModal.classList.add('hidden');
             document.getElementById('addUserForm').reset(); 
             window.loadUsers(); 
@@ -118,6 +127,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (error) {
             window.showNeoModal({ title: 'Update Failed', icon: 'fa-solid fa-triangle-exclamation', message: error.message, headerColor: '#FCA5A5' });
         } else {
+            // 🔥 THE NEW TRACKER!
+            await window.logSystemActivity('UPDATE', `Modified user profile for: ${newName}`);
+
             editUserModal.classList.add('hidden');
             window.loadUsers();
         }
@@ -138,6 +150,9 @@ window.deleteUser = function(userId, userEmail) {
         cancelText: 'Cancel',
         onConfirm: async () => {
             await supabase.from('profiles').delete().eq('id', userId);
+            
+            await window.logSystemActivity('DELETE', `Revoked system access for: ${userEmail}`);
+            
             window.loadUsers(); 
         }
     });
