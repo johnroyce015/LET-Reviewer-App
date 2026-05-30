@@ -1,72 +1,56 @@
 var supabase = window.supabaseClient;
-
 let allQuestions = []; 
 
 document.addEventListener('DOMContentLoaded', async () => {
-    
-    // 1. VIP BOUNCER
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !session) { window.location.href = 'login.html'; return; }
 
-    const { data: profileData, error: profileError } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
-    if (profileError || !profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
+    const { data: profileData } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
+    if (!profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
         window.location.href = 'index.html'; return; 
     }
 
-    // 2. Fetch data from DB
     await fetchLiveQuestions();
 
-    // 3. Search and Filter Event Listeners
     document.getElementById('searchInput').addEventListener('input', filterQuestions);
     document.getElementById('categoryFilter').addEventListener('change', filterQuestions);
 
-    // 4. Edit Modal Controls
     const editModal = document.getElementById('editQuestionModal');
     
-    document.getElementById('cancelEditQBtn').addEventListener('click', () => {
-        editModal.classList.add('hidden');
-    });
+    document.getElementById('cancelEditQBtn').addEventListener('click', () => { editModal.classList.add('hidden'); });
 
     document.getElementById('editQuestionForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('editQId').value;
         const qText = document.getElementById('editQText').value;
-        const optA = document.getElementById('editOptA').value;
-        const optB = document.getElementById('editOptB').value;
-        const optC = document.getElementById('editOptC').value;
-        const optD = document.getElementById('editOptD').value;
-        const correct = document.getElementById('editQCorrect').value;
-
+        
         const { error } = await supabase.from('questions').update({
             question_text: qText,
-            option_a: optA,
-            option_b: optB,
-            option_c: optC,
-            option_d: optD,
-            correct_answer: correct
+            option_a: document.getElementById('editOptA').value,
+            option_b: document.getElementById('editOptB').value,
+            option_c: document.getElementById('editOptC').value,
+            option_d: document.getElementById('editOptD').value,
+            correct_answer: document.getElementById('editQCorrect').value
         }).eq('id', id);
 
         if (error) {
             window.showNeoModal({ title: 'Update Failed', message: error.message, headerColor: '#FCA5A5' });
         } else {
+            // 🔥 THE NEW TRACKER!
+            await window.logSystemActivity('UPDATE', `Edited question ID #${id}`);
+
             editModal.classList.add('hidden');
-            await fetchLiveQuestions(); // Refresh live data
+            await fetchLiveQuestions(); 
         }
     });
 });
-
-// --- CORE FUNCTIONS ---
 
 async function fetchLiveQuestions() {
     const container = document.getElementById('questionsContainer');
     container.innerHTML = '<div class="loading-state">Loading questions...</div>';
     
     const { data, error } = await supabase.from('questions').select('*').order('id', { ascending: false });
-
-    if (error) {
-        container.innerHTML = `<div class="loading-state">Error loading questions: ${error.message}</div>`;
-        return;
-    }
+    if (error) { container.innerHTML = `<div class="loading-state">Error: ${error.message}</div>`; return; }
 
     allQuestions = data; 
     populateCategoryDropdown(); 
@@ -78,9 +62,7 @@ function populateCategoryDropdown() {
     const uniqueCategories = [...new Set(allQuestions.map(q => q.category))].filter(Boolean);
     
     filter.innerHTML = '<option value="All">All Categories</option>';
-    uniqueCategories.forEach(cat => {
-        filter.innerHTML += `<option value="${cat}">${cat}</option>`;
-    });
+    uniqueCategories.forEach(cat => { filter.innerHTML += `<option value="${cat}">${cat}</option>`; });
 }
 
 function filterQuestions() {
@@ -98,12 +80,7 @@ function filterQuestions() {
 
 function renderQuestions(questionsArray) {
     const container = document.getElementById('questionsContainer');
-    
-    if (questionsArray.length === 0) {
-        container.innerHTML = `<div class="loading-state">No matching questions found.</div>`;
-        return;
-    }
-
+    if (questionsArray.length === 0) { container.innerHTML = `<div class="loading-state">No matching questions found.</div>`; return; }
     container.innerHTML = ''; 
 
     questionsArray.forEach(q => {
@@ -119,7 +96,6 @@ function renderQuestions(questionsArray) {
 
         const card = document.createElement('div');
         card.className = 'question-card';
-        
         card.innerHTML = `
             <div class="question-info">
                 <h3>${q.question_text}</h3>
@@ -132,19 +108,14 @@ function renderQuestions(questionsArray) {
             </div>
             <div><span class="category-badge ${catColor}">${q.category}</span></div>
             <div class="action-buttons">
-                <button class="action-btn edit-btn" onclick="openEditModal(${q.id})" title="Edit">
-                    <i class="fa-solid fa-pen"></i>
-                </button>
-                <button class="action-btn delete-btn" onclick="deleteQuestion(${q.id})" title="Delete">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
+                <button class="action-btn edit-btn" onclick="openEditModal(${q.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                <button class="action-btn delete-btn" onclick="deleteQuestion(${q.id})" title="Delete"><i class="fa-solid fa-trash"></i></button>
             </div>
         `;
         container.appendChild(card);
     });
 }
 
-// Edit Modal Trigger
 window.openEditModal = function(id) {
     const q = allQuestions.find(x => x.id === id);
     if (!q) return;
@@ -156,27 +127,20 @@ window.openEditModal = function(id) {
     document.getElementById('editOptC').value = q.option_c;
     document.getElementById('editOptD').value = q.option_d;
     document.getElementById('editQCorrect').value = q.correct_answer;
-
     document.getElementById('editQuestionModal').classList.remove('hidden');
 };
 
-// Delete Logic
 window.deleteQuestion = async function(id) {
     window.showNeoModal({
-        title: 'Confirm Deletion',
-        icon: 'fa-solid fa-trash',
-        message: 'Are you sure you want to permanently delete this question?',
-        headerColor: '#FDE68A',
-        confirmColor: '#EF4444',
-        confirmText: 'Yes, Delete',
-        cancelText: 'Cancel',
+        title: 'Confirm Deletion', icon: 'fa-solid fa-trash', message: 'Are you sure you want to delete this question?',
+        headerColor: '#FDE68A', confirmColor: '#EF4444', confirmText: 'Yes, Delete', cancelText: 'Cancel',
         onConfirm: async () => {
             const { error } = await supabase.from('questions').delete().eq('id', id);
             if(!error) {
+                // 🔥 THE NEW TRACKER!
+                await window.logSystemActivity('DELETE', `Deleted a mock exam question`);
                 fetchLiveQuestions(); 
-            } else {
-                window.showNeoModal({ title: 'Error', message: error.message, headerColor: '#FCA5A5' });
-            }
+            } else { window.showNeoModal({ title: 'Error', message: error.message, headerColor: '#FCA5A5' }); }
         }
     });
 };
