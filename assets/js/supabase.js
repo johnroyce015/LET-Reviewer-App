@@ -25,15 +25,13 @@ window.logSystemActivity = async function(actionType, description) {
 // GLOBAL SYSTEM LOGGER
 window.logSystemActivity = async function(actionType, details) {
     try {
-        // 1. Find out who is currently logged in
         const { data: { session }, error: sessionError } = await window.supabaseClient.auth.getSession();
         if (sessionError || !session) return; 
 
-        // 2. Push the log to the database
         const { error } = await window.supabaseClient.from('activity_logs').insert([{
-            user_id: session.user.id,
-            action: actionType, // e.g., 'CREATE', 'DELETE', 'UPDATE'
-            details: details    // e.g., 'Bulk uploaded 150 questions'
+            user_email: session.user.email,
+            action_type: actionType,
+            description: details
         }]);
 
         if (error) {

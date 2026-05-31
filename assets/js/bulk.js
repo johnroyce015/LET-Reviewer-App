@@ -84,8 +84,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                         messageBox.style.color = '#EF4444';
                         messageBox.textContent = "Upload Failed: " + error.message;
                     } else {
-
-                        await window.logSystemActivity('CREATE', `Bulk uploaded ${formattedQuestions.length} questions to ${selectedCategory}`);
+                        // 🟢 Use our newly fixed Global Logger!
+                        if (typeof window.logSystemActivity === 'function') {
+                            await window.logSystemActivity('UPLOAD', `Bulk uploaded ${formattedQuestions.length} questions to ${selectedCategory}`);
+                        } else {
+                            console.error("The logger function is still missing from this page!");
+                        }
 
                         messageBox.style.color = '#10B981';
                         messageBox.textContent = `✅ Successfully uploaded ${formattedQuestions.length} questions!`;
@@ -93,9 +97,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         selectedFile.innerHTML = "No file selected";
                         selectedFile.style.color = "#111827";
                     }
-
-                    uploadBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Upload File`;
-                    uploadBtn.disabled = false;
                 }
             });
         });

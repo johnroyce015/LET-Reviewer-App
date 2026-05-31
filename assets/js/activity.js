@@ -65,10 +65,20 @@ async function fetchLiveLogs() {
         badge.textContent = log.action_type;
         
         const type = log.action_type.toLowerCase();
-        if (type.includes('create') || type.includes('add')) badge.classList.add('action-create');
-        else if (type.includes('delete') || type.includes('remove')) badge.classList.add('action-delete');
-        else if (type.includes('update') || type.includes('edit')) badge.classList.add('action-update');
-        else badge.classList.add('action-login');
+        
+        // 🟢 Added 'upload' to the Create (Green) badge styling!
+        if (type.includes('create') || type.includes('add') || type.includes('upload')) {
+            badge.classList.add('action-create');
+        }
+        else if (type.includes('delete') || type.includes('remove')) {
+            badge.classList.add('action-delete');
+        }
+        else if (type.includes('update') || type.includes('edit')) {
+            badge.classList.add('action-update');
+        }
+        else {
+            badge.classList.add('action-login');
+        }
 
         container.appendChild(clone);
     });
