@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'index.html'; return; 
     }
 
+document.body.style.visibility = 'visible';
+
     // 1. SILENT PING: Update this user's "last_active_at" timestamp to right now!
     await supabase.from('profiles')
         .update({ last_active_at: new Date().toISOString() })

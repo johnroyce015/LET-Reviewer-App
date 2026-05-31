@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'index.html'; return;
     }
 
+document.body.style.visibility = 'visible';
+
     const container = document.getElementById('usersContainer');
     
     // MODAL ELEMENTS
@@ -138,21 +140,36 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.loadUsers();
 });
 
-// 5. SECURE DELETE FUNCTION
+// 5. SECURE DELETE FUNCTION (WITH PIN CONFIRMATION)
 window.deleteUser = function(userId, userEmail) {
     window.showNeoModal({
-        title: 'Revoke Access',
-        icon: 'fa-solid fa-user-xmark',
-        message: `Are you sure you want to delete the profile for <b>${userEmail}</b>?`,
+        title: 'Security Authorization',
+        icon: 'fa-solid fa-lock',
+        message: `Enter the Admin PIN to permanently revoke access for <b>${userEmail}</b>.`,
+        requireInput: true,
+        inputType: 'password', // Hides the characters as they type!
+        inputPlaceholder: 'Enter 6-digit PIN (e.g. 123456)',
         headerColor: '#FCA5A5',
         confirmColor: '#EF4444',
-        confirmText: 'Yes, Revoke Access',
+        confirmText: 'Verify & Revoke',
         cancelText: 'Cancel',
-        onConfirm: async () => {
+        onConfirm: async (pin) => {
+            
+            // Check the PIN!
+            if (pin !== '123456') {
+                window.showNeoModal({ 
+                    title: 'Access Denied', 
+                    icon: 'fa-solid fa-triangle-exclamation', 
+                    message: 'Incorrect Security PIN. Action aborted.', 
+                    headerColor: '#FCA5A5' 
+                });
+                return;
+            }
+
+            // If PIN is correct, proceed with deletion
             await supabase.from('profiles').delete().eq('id', userId);
             
             await window.logSystemActivity('DELETE', `Revoked system access for: ${userEmail}`);
-            
             window.loadUsers(); 
         }
     });

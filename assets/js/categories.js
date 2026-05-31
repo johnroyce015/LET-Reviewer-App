@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'index.html'; return;
     }
 
+document.body.style.visibility = 'visible';
+
     // --- ADD CATEGORY LOGIC ---
     const addModal = document.getElementById('addCategoryModal');
     if (addModal) {
@@ -109,20 +111,42 @@ async function fetchLiveCategories() {
     }
 }
 
+// SECURE DELETE FUNCTION (WITH PIN CONFIRMATION)
 window.deleteCategory = async function(id, categoryName) {
     window.showNeoModal({
-        title: 'Confirm Deletion',
-        icon: 'fa-solid fa-trash',
-        message: `Are you sure you want to delete the category <b>${categoryName}</b>?`,
-        headerColor: '#FDE68A', confirmColor: '#EF4444', confirmText: 'Yes, Delete', cancelText: 'Cancel',
-        onConfirm: async () => {
+        title: 'Security Authorization',
+        icon: 'fa-solid fa-lock',
+        message: `Enter the Admin PIN to delete the category <b>${categoryName}</b>.`,
+        requireInput: true,
+        inputType: 'password',
+        inputPlaceholder: 'Enter 6-digit PIN',
+        headerColor: '#FDE68A',
+        confirmColor: '#EF4444',
+        confirmText: 'Verify & Delete',
+        cancelText: 'Cancel',
+        onConfirm: async (pin) => {
+            
+            // Check the PIN!
+            if (pin !== '123456') {
+                window.showNeoModal({ 
+                    title: 'Access Denied', 
+                    icon: 'fa-solid fa-triangle-exclamation', 
+                    message: 'Incorrect Security PIN. Action aborted.', 
+                    headerColor: '#FCA5A5' 
+                });
+                return;
+            }
+
+            // If PIN is correct, proceed with deletion
             const { error } = await supabase.from('categories').delete().eq('id', id);
+            
             if(!error) { 
-                // 🔥 THE NEW TRACKER!
                 await window.logSystemActivity('DELETE', `Permanently deleted the category: ${categoryName}`);
                 fetchLiveCategories(); 
             } 
-            else { window.showNeoModal({ title: 'Error', message: error.message, headerColor: '#FCA5A5' }); }
+            else { 
+                window.showNeoModal({ title: 'Error', message: error.message, headerColor: '#FCA5A5' }); 
+            }
         }
     });
 };

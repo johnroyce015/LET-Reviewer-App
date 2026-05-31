@@ -5,7 +5,10 @@ window.showNeoModal = function({
     confirmText = 'OK', 
     cancelText = null, 
     headerColor = '#FDE68A', 
-    confirmColor = '#111827', // Dynamic color is back!
+    confirmColor = '#C4B5FD', 
+    requireInput = false,        // NEW: Triggers the input box
+    inputType = 'text',          // NEW: Defines type (e.g. 'password')
+    inputPlaceholder = '',       // NEW: Placeholder text
     onConfirm = null 
 }) {
     
@@ -15,12 +18,20 @@ window.showNeoModal = function({
     let buttonsHtml = '';
     
     if (cancelText) {
-        // Restored thick classes and neutral gray
-        buttonsHtml += `<button class="neo-button btn-cancel" style="background: #E5E7EB; color: #111827;">${cancelText}</button>`;
+        buttonsHtml += `<button class="btn-cancel" type="button">${cancelText}</button>`;
     }
     
-    // Restored dynamic confirmColor! Delete will be Red, Save will be Green/Purple.
-    buttonsHtml += `<button class="neo-button btn-confirm" style="background: ${confirmColor}; color: #FFFFFF;">${confirmText}</button>`;
+    buttonsHtml += `<button class="btn-confirm" style="background: ${confirmColor} !important;" type="button">${confirmText}</button>`;
+
+    // Build the Input Box if required
+    let inputHtml = '';
+    if (requireInput) {
+        inputHtml = `
+            <div style="margin-top: 15px;">
+                <input type="${inputType}" id="neoModalInput" class="neo-input" placeholder="${inputPlaceholder}" style="width: 100%; box-sizing: border-box;" autocomplete="off">
+            </div>
+        `;
+    }
 
     overlay.innerHTML = `
         <div class="modal-content neo-brutal-modal">
@@ -30,6 +41,7 @@ window.showNeoModal = function({
             
             <div class="modal-body">
                 <p>${message}</p>
+                ${inputHtml}
             </div>
             
             <div class="modal-footer">
@@ -47,7 +59,19 @@ window.showNeoModal = function({
     }
 
     overlay.querySelector('.btn-confirm').addEventListener('click', () => {
-        if (onConfirm) onConfirm(); 
+        let val = null;
+        if (requireInput) {
+            const inputEl = overlay.querySelector('#neoModalInput');
+            val = inputEl.value.trim();
+            if (!val) {
+                // If they try to submit an empty PIN, turn the box red and stop them!
+                inputEl.style.border = "3px solid #EF4444";
+                inputEl.focus();
+                return; 
+            }
+        }
+
+        if (onConfirm) onConfirm(val); 
         closeModal();
     });
 };

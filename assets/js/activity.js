@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'index.html'; return; 
     }
 
+document.body.style.visibility = 'visible';
+
     // Bind function globally so the Refresh button works
     window.fetchLiveLogs = fetchLiveLogs;
 

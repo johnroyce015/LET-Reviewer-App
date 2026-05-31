@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'index.html'; return; 
     }
 
+document.body.style.visibility = 'visible';
+
     await fetchLiveQuestions();
 
     document.getElementById('searchInput').addEventListener('input', filterQuestions);
