@@ -95,15 +95,27 @@
     </div>
 </template>
 
+<!-- ADD CATEGORY MODAL WITH EXAM LEVEL DROPDOWN -->
 <div id="addCategoryModal" class="modal-overlay hidden">
     <div class="modal-content neo-brutal-modal" style="max-width: 500px;">
-        <div class="modal-header" style="background: #FDE68A;"> <h3><i class="fa-solid fa-plus"></i> Create New Category</h3>
+        <div class="modal-header" style="background: #FDE68A;"> 
+            <h3><i class="fa-solid fa-plus"></i> Create New Category</h3>
         </div>
         <form id="addCategoryForm">
             <div class="modal-body form-stack">
                 <div class="neo-form-group">
                     <label class="neo-label">Category Name</label>
                     <input type="text" id="newCategoryName" class="neo-input" placeholder="e.g., Physical Education" required>
+                </div>
+                
+                <!-- NEW EXAM LEVEL SELECT FIELD -->
+                <div class="neo-form-group" style="margin-top: 15px;">
+                    <label class="neo-label">Exam Level Target</label>
+                    <select id="newCategoryLevel" class="neo-input" required>
+                        <option value="Both">Both (Gen Ed / Prof Ed)</option>
+                        <option value="Elementary">Elementary Only</option>
+                        <option value="Secondary">Secondary Only (Majors)</option>
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">
@@ -114,6 +126,7 @@
     </div>
 </div>
 
+<!-- EDIT CATEGORY MODAL WITH EXAM LEVEL DROPDOWN -->
 <div id="editCategoryModal" class="modal-overlay hidden">
     <div class="modal-content neo-brutal-modal">
         <div class="modal-header" style="background: #C4B5FD;">
@@ -125,6 +138,16 @@
                 <div class="neo-form-group">
                     <label class="neo-label">Category Name</label>
                     <input type="text" id="editCategoryName" class="neo-input" required>
+                </div>
+                
+                <!-- NEW EXAM LEVEL SELECT FIELD -->
+                <div class="neo-form-group" style="margin-top: 15px;">
+                    <label class="neo-label">Exam Level Target</label>
+                    <select id="editCategoryLevel" class="neo-input" required>
+                        <option value="Both">Both (Gen Ed / Prof Ed)</option>
+                        <option value="Elementary">Elementary Only</option>
+                        <option value="Secondary">Secondary Only (Majors)</option>
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">

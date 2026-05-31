@@ -1,15 +1,13 @@
-var supabase = window.supabaseClient;
-
 document.addEventListener('DOMContentLoaded', async () => {
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    const { data: { session }, error: sessionError } = await window.supabaseClient.auth.getSession();
     if (sessionError || !session) { window.location.href = 'login.html'; return; }
 
-    const { data: profileData } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
+    const { data: profileData } = await window.supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
     if (!profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
         window.location.href = 'index.html'; return;
     }
 
-document.body.style.visibility = 'visible';
+    document.body.style.visibility = 'visible';
 
     // --- ADD CATEGORY LOGIC ---
     const addModal = document.getElementById('addCategoryModal');
@@ -22,15 +20,17 @@ document.body.style.visibility = 'visible';
         document.getElementById('addCategoryForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const newName = document.getElementById('newCategoryName').value;
+            const newLevel = document.getElementById('newCategoryLevel').value; // NEW FIELD!
 
-            const { error } = await supabase.from('categories').insert([{ category_name: newName }]);
+            const { error } = await window.supabaseClient.from('categories').insert([{ 
+                category_name: newName,
+                exam_level: newLevel 
+            }]);
 
             if (error) {
                 window.showNeoModal({ title: 'Creation Failed', message: error.message, headerColor: '#FCA5A5' });
             } else {
-                // 🔥 THE NEW TRACKER!
-                await window.logSystemActivity('CREATE', `Created a new category: ${newName}`);
-                
+                await window.logSystemActivity('CREATE', `Created a new ${newLevel} category: ${newName}`);
                 addModal.classList.add('hidden');
                 document.getElementById('addCategoryForm').reset();
                 fetchLiveCategories(); 
@@ -49,15 +49,17 @@ document.body.style.visibility = 'visible';
             e.preventDefault();
             const id = document.getElementById('editCategoryId').value;
             const newName = document.getElementById('editCategoryName').value;
+            const newLevel = document.getElementById('editCategoryLevel').value; // NEW FIELD!
 
-            const { error } = await supabase.from('categories').update({ category_name: newName }).eq('id', id);
+            const { error } = await window.supabaseClient.from('categories').update({ 
+                category_name: newName,
+                exam_level: newLevel
+            }).eq('id', id);
 
             if (error) {
                 window.showNeoModal({ title: 'Update Failed', message: error.message, headerColor: '#FCA5A5' });
             } else {
-                // 🔥 THE NEW TRACKER!
-                await window.logSystemActivity('UPDATE', `Renamed a category to: ${newName}`);
-
+                await window.logSystemActivity('UPDATE', `Updated category: ${newName}`);
                 editModal.classList.add('hidden');
                 fetchLiveCategories(); 
             }
@@ -72,7 +74,7 @@ async function fetchLiveCategories() {
     const cardTemplate = document.getElementById('categoryCardTemplate');
     const addTemplate = document.getElementById('addCategoryTemplate');
 
-    const { data: categories, error } = await supabase.from('categories').select('*').order('created_at', { ascending: true });
+    const { data: categories, error } = await window.supabaseClient.from('categories').select('*').order('created_at', { ascending: true });
 
     if (error) { container.textContent = `Error: ${error.message}`; return; }
     container.innerHTML = ''; 
@@ -88,15 +90,24 @@ async function fetchLiveCategories() {
         clone.querySelector('.category-name').textContent = cat.category_name;
         
         const URLSlug = cat.category_name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
-        clone.querySelector('.category-uri-tag').textContent = `/${URLSlug}`;
+        
+        // 🟢 THE NEW LEVEL BADGE
+        const levelText = cat.exam_level ? cat.exam_level.toUpperCase() : 'BOTH';
+        const levelBadge = `<span style="background: #111827; color: #FFF; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; margin-left: 8px;">${levelText}</span>`;
+        
+        // Injecting the URI slug and the Level Badge next to each other
+        clone.querySelector('.category-uri-tag').innerHTML = `/${URLSlug} ${levelBadge}`;
+        
         clone.querySelector('.category-description').textContent = `Foundational materials and practice test vectors explicitly curated for comprehensive ${cat.category_name} review segments.`;
 
-        const { count } = await supabase.from('questions').select('*', { count: 'exact', head: true }).eq('category', cat.category_name);
+        const { count } = await window.supabaseClient.from('questions').select('*', { count: 'exact', head: true }).eq('category', cat.category_name);
         clone.querySelector('.count-slot').textContent = count || 0;
 
         clone.querySelector('.edit-card-square').onclick = () => {
             document.getElementById('editCategoryId').value = cat.id;
             document.getElementById('editCategoryName').value = cat.category_name;
+            // Set the dropdown to the correct saved level when editing!
+            document.getElementById('editCategoryLevel').value = cat.exam_level || 'Both';
             document.getElementById('editCategoryModal').classList.remove('hidden');
         };
 
@@ -125,26 +136,15 @@ window.deleteCategory = async function(id, categoryName) {
         confirmText: 'Verify & Delete',
         cancelText: 'Cancel',
         onConfirm: async (pin) => {
-            
-            // Check the PIN!
             if (pin !== '123456') {
-                window.showNeoModal({ 
-                    title: 'Access Denied', 
-                    icon: 'fa-solid fa-triangle-exclamation', 
-                    message: 'Incorrect Security PIN. Action aborted.', 
-                    headerColor: '#FCA5A5' 
-                });
+                window.showNeoModal({ title: 'Access Denied', icon: 'fa-solid fa-triangle-exclamation', message: 'Incorrect Security PIN. Action aborted.', headerColor: '#FCA5A5' });
                 return;
             }
-
-            // If PIN is correct, proceed with deletion
-            const { error } = await supabase.from('categories').delete().eq('id', id);
-            
+            const { error } = await window.supabaseClient.from('categories').delete().eq('id', id);
             if(!error) { 
                 await window.logSystemActivity('DELETE', `Permanently deleted the category: ${categoryName}`);
                 fetchLiveCategories(); 
-            } 
-            else { 
+            } else { 
                 window.showNeoModal({ title: 'Error', message: error.message, headerColor: '#FCA5A5' }); 
             }
         }
