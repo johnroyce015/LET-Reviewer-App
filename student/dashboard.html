@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - LET Reviewer</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="../manifest.json">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/pages/student-dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- Core Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase.js"></script>
+    <script src="../assets/js/offline-sync.js"></script>
+
+    <!-- Page Specific Logic -->
+    <script src="../assets/js/student-dashboard.js" defer></script>
+</head>
+<body class="dashboard-body">
+
+    <!-- Top Navigation -->
+    <nav class="dashboard-nav">
+        <div class="nav-brand">📖 LET Reviewer</div>
+        <div class="nav-user-controls">
+            <span id="userEmail" class="user-email"></span>
+            <button id="logoutBtn" class="logout-btn" title="Sign Out">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <div class="dashboard-header">
+            <h2>Select a Subject</h2>
+            <div id="networkStatus" class="network-badge badge-online">
+                <i class="fa-solid fa-wifi"></i> Online
+            </div>
+        </div>
+
+        <!-- OfflineSync Data Injection Target -->
+        <div id="categoriesGrid" class="categories-grid">
+            <div class="loading-state">
+                <i class="fa-solid fa-spinner fa-spin"></i> Loading subjects...
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

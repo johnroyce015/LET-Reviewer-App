@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Exam - LET Reviewer</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="../manifest.json">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/pages/quiz.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- Core Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase.js"></script>
+    <script src="../assets/js/offline-sync.js"></script>
+    
+    <!-- Page Specific Logic -->
+    <script src="../assets/js/quiz.js"></script>
+</head>
+<body class="quiz-body">
+
+    <nav class="quiz-nav">
+        <div class="nav-title">📖 LET Reviewer</div>
+        <div class="nav-controls">
+            <div id="timerDisplay" class="timer-badge"><i class="fa-regular fa-clock"></i> 00:00</div>
+            <button id="exitQuizBtn" class="exit-btn"><i class="fa-solid fa-xmark"></i> Exit</button>
+        </div>
+    </nav>
+
+    <main class="quiz-container">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state">
+            <i class="fa-solid fa-spinner fa-spin"></i> Loading questions...
+        </div>
+
+        <!-- Quiz Interface (Hidden until loaded) -->
+        <div id="quizContent" class="hidden">
+            <div class="quiz-header">
+                <span id="questionCounter" class="question-counter">Question 1 of 10</span>
+                <span id="networkStatus" class="network-badge badge-online" title="Network Status"><i class="fa-solid fa-wifi"></i></span>
+            </div>
+
+            <h2 id="questionText" class="question-text"></h2>
+
+            <div id="optionsContainer" class="options-grid">
+                <!-- Buttons will be injected here via JavaScript -->
+            </div>
+
+            <div class="quiz-footer">
+                <button id="prevBtn" class="nav-btn hidden">Previous</button>
+                <button id="nextBtn" class="nav-btn" disabled>Next Question</button>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

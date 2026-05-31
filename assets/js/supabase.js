@@ -3,41 +3,42 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 // Attach it to the global window object
 window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
 // ==========================================
 // UNIVERSAL ACTIVITY LOGGER
 // ==========================================
-window.logSystemActivity = async function(actionType, description) {
+window.logSystemActivity = async function(actionType, details) {
+    console.log(`🚀 Attempting to log action: [${actionType}]`);
+
     try {
-        // 1. Get the current logged-in user
-        const { data: { session } } = await window.supabaseClient.auth.getSession();
-        if (!session) return; // Don't log if no one is logged in
+        // 1. Verify the user is currently logged in
+        const { data: { session }, error: sessionError } = await window.supabaseClient.auth.getSession();
+        
+        if (sessionError || !session) {
+            console.warn("⚠️ Cannot log activity: No active user session found.");
+            return; 
+        }
 
         // 2. Send the log to the Supabase database
-        await window.supabaseClient.from('activity_logs').insert([{
-            user_email: session.user.email,
-            action_type: actionType,
-            description: description
-        }]);
-    } catch (err) {
-        console.error("Activity logging failed:", err);
-    }
-};
-// GLOBAL SYSTEM LOGGER
-window.logSystemActivity = async function(actionType, details) {
-    try {
-        const { data: { session }, error: sessionError } = await window.supabaseClient.auth.getSession();
-        if (sessionError || !session) return; 
+        const { data, error } = await window.supabaseClient
+            .from('activity_logs')
+            .insert([{
+                user_email: session.user.email,
+                action_type: actionType,
+                description: details
+            }])
+            .select(); // .select() forces Supabase to return the inserted row
 
-        const { error } = await window.supabaseClient.from('activity_logs').insert([{
-            user_email: session.user.email,
-            action_type: actionType,
-            description: details
-        }]);
-
+        // 3. Catch Database or RLS Errors
         if (error) {
-            console.error("Database refused the log:", error.message);
+            console.error("❌ Supabase refused the log:", error.message);
+            console.error("Hint: Check your Row Level Security (RLS) policies for the activity_logs table.");
+            return;
         }
+
+        console.log("✅ Successfully inserted into database:", data);
+
     } catch (err) {
-        console.error("Logger crashed:", err);
+        console.error("❌ Logger crashed unexpectedly:", err);
     }
 };

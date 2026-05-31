@@ -4,22 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LET Reviewer - Study Anywhere</title>
-    <link rel="stylesheet" href="assets/css/style.css">
     
+    <!-- 1. PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <!-- 2. Supabase Core & Client (Required for the auto-redirect to work) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase.js"></script>
+
+    <!-- 3. PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js')
+            .then(registration => {
+              console.log('✅ Service Worker registered successfully!', registration.scope);
+            })
+            .catch(err => {
+              console.error('❌ Service Worker registration failed:', err);
+            });
+        });
+      }
+    </script>
+
     <script>
     // AUTO-REDIRECT: If already logged in, skip the login/landing page!
     document.addEventListener('DOMContentLoaded', async () => {
-        const { data: { session } } = await window.supabaseClient.auth.getSession();
-        if (session) {
-            // Check if they are a teacher before sending to dashboard
-            const { data: profileData } = await window.supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
-            if (profileData && (profileData.role === 'teacher' || profileData.role === 'admin')) {
-                window.location.href = 'dashboard.html';
+        try {
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (session) {
+                // Check if they are a teacher before sending to dashboard
+                const { data: profileData } = await window.supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
+                
+                if (profileData && (profileData.role === 'teacher' || profileData.role === 'admin')) {
+                    // Redirect to the new admin folder
+                    window.location.href = 'admin/dashboard.html';
+                } else {
+                    // Redirect to the new student folder
+                    window.location.href = 'student/dashboard.html';
+                }
             }
+        } catch (error) {
+            console.error("Error checking active session:", error);
         }
     });
-</script>
+    </script>
 </head>
 <body class="landing-body">
 
