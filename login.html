@@ -9,17 +9,22 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase.js" defer></script>
-    <script src="assets/js/modals.js" defer></script>
+    <script src="assets/js/admin/modals.js" defer></script>
     <script src="assets/js/auth.js" defer></script>
     <script>
     // AUTO-REDIRECT: If already logged in, skip the login/landing page!
     document.addEventListener('DOMContentLoaded', async () => {
         const { data: { session } } = await window.supabaseClient.auth.getSession();
         if (session) {
-            // Check if they are a teacher before sending to dashboard
+            // Check if they are a teacher/admin before sending to dashboard
             const { data: profileData } = await window.supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
+            
             if (profileData && (profileData.role === 'teacher' || profileData.role === 'admin')) {
-                window.location.href = 'dashboard.html';
+                // Route to Admin side
+                window.location.href = 'admin/dashboard.html';
+            } else {
+                // Route to Student side
+                window.location.href = 'student/dashboard.html';
             }
         }
     });

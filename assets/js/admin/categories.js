@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const { data: { session }, error: sessionError } = await window.supabaseClient.auth.getSession();
-    if (sessionError || !session) { window.location.href = 'login.html'; return; }
+    if (sessionError || !session) { window.location.href = '../login.html'; return; }
 
     const { data: profileData } = await window.supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
     if (!profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {

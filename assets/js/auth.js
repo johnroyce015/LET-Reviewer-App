@@ -5,7 +5,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 1. Skip Login if already authenticated 
     const { data: { session } } = await supabase.auth.getSession();
     if (session && window.location.pathname.includes('login.html')) {
-        window.location.href = 'dashboard.html';
+        // Fetch role to route properly
+        const { data: profile } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
+        if (profile && (profile.role === 'teacher' || profile.role === 'admin')) {
+            window.location.href = 'admin/dashboard.html';
+        } else {
+            window.location.href = 'student/dashboard.html';
+        }
         return;
     }
 
@@ -48,25 +54,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 submitBtn.disabled = false;
             } else {
                 
-                // VIP Bouncer Check
+                // VIP Bouncer Check - Route based on role
                 const { data: profile } = await supabase.from('profiles').select('role').eq('id', data.user.id).single();
 
                 if (profile && (profile.role === 'teacher' || profile.role === 'admin')) {
-                    window.location.href = 'dashboard.html';
+                    window.location.href = 'admin/dashboard.html';
                 } else {
-                    window.showNeoModal({
-                        title: 'Access Restricted',
-                        icon: 'fa-solid fa-hand',
-                        message: 'This web dashboard is exclusively for Teachers. Students must use the mobile application to take mock exams.',
-                        headerColor: '#FCA5A5',
-                        confirmColor: '#EF4444',
-                        confirmText: 'Sign Out',
-                        onConfirm: async () => {
-                            await supabase.auth.signOut();
-                            submitBtn.innerHTML = originalText;
-                            submitBtn.disabled = false;
-                        }
-                    });
+                    window.location.href = 'student/dashboard.html';
                 }
             }
         });

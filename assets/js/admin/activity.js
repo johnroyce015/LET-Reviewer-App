@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // 1. VIP BOUNCER (Only Teachers/Admins can view logs)
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    if (sessionError || !session) { window.location.href = 'login.html'; return; }
+    if (sessionError || !session) { window.location.href = '../login.html'; return; }
 
     const { data: profileData } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
     if (!profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {

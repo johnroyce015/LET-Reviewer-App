@@ -2,7 +2,7 @@ var supabase = window.supabaseClient;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    if (sessionError || !session) { window.location.href = 'login.html'; return; }
+    if (sessionError || !session) { window.location.href = '../login.html'; return; }
 
     const { data: profileData } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
     if (!profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {

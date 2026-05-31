@@ -11,15 +11,20 @@ document.addEventListener('DOMContentLoaded', () => {
             window.showNeoModal({
                 title: 'Confirm Logout',
                 icon: 'fa-solid fa-right-from-bracket',
-                message: 'Are you sure you want to log out of the admin panel?',
+                
+                // 🟢 UPDATED: Made the text neutral so it works for both Admins and Students!
+                message: 'Are you sure you want to log out of your account?', 
+                
                 headerColor: '#FDE68A', 
                 confirmColor: '#EF4444', 
                 confirmText: 'Log Out',
                 cancelText: 'Cancel',
                 onConfirm: async () => {
-                    // SECURE SIGN OUT (Fixed typo to use shared supabase client)
+                    // SECURE SIGN OUT 
                     await supabase.auth.signOut();
-                    window.location.href = 'login.html';
+                    
+                    // 🟢 This correctly steps out of the admin/ or student/ folder
+                    window.location.href = '../login.html';
                 }
             });
         });
