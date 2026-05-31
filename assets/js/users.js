@@ -148,7 +148,7 @@ window.deleteUser = function(userId, userEmail) {
         message: `Enter the Admin PIN to permanently revoke access for <b>${userEmail}</b>.`,
         requireInput: true,
         inputType: 'password', // Hides the characters as they type!
-        inputPlaceholder: 'Enter 6-digit PIN (e.g. 123456)',
+        inputPlaceholder: 'Enter 6-digit PIN',
         headerColor: '#FCA5A5',
         confirmColor: '#EF4444',
         confirmText: 'Verify & Revoke',
