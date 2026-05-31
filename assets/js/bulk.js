@@ -1,7 +1,7 @@
 var supabase = window.supabaseClient;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    
+
     // VIP Bouncer
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
@@ -11,12 +11,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const fileInput = document.getElementById("fileInput");
     const selectedFile = document.getElementById("selectedFile");
-    
-    if(fileInput) {
-        fileInput.addEventListener("change", function(){
-            if(fileInput.files.length > 0){
+
+    if (fileInput) {
+        fileInput.addEventListener("change", function () {
+            if (fileInput.files.length > 0) {
                 selectedFile.innerHTML = fileInput.files[0].name;
-                selectedFile.style.color = '#10B981'; 
+                selectedFile.style.color = '#10B981';
             }
         });
     }
@@ -24,9 +24,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const categorySelect = document.getElementById('categorySelect');
     if (categorySelect) {
         categorySelect.innerHTML = '<option value="">Loading categories...</option>';
-        
+
         const { data: categories, error: catError } = await supabase.from('categories').select('category_name');
-        
+
         if (catError) {
             categorySelect.innerHTML = '<option value="">Error loading categories</option>';
             console.error(catError);
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             categorySelect.innerHTML = '<option value="">-- Choose a Category --</option>';
             categories.forEach(cat => {
                 const option = document.createElement('option');
-                option.value = cat.category_name; 
+                option.value = cat.category_name;
                 option.textContent = cat.category_name;
                 categorySelect.appendChild(option);
             });
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            
+
             const file = fileInput.files[0];
             const selectedCategory = categorySelect.value;
 
@@ -61,9 +61,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             uploadBtn.disabled = true;
 
             Papa.parse(file, {
-                header: true, 
+                header: true,
                 skipEmptyLines: true,
-                complete: async function(results) {
+                complete: async function (results) {
                     const csvData = results.data;
                     const formattedQuestions = csvData.map(row => {
                         const values = Object.values(row);
@@ -84,6 +84,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         messageBox.style.color = '#EF4444';
                         messageBox.textContent = "Upload Failed: " + error.message;
                     } else {
+
+                        await window.logSystemActivity('CREATE', `Bulk uploaded ${formattedQuestions.length} questions to ${selectedCategory}`);
+
                         messageBox.style.color = '#10B981';
                         messageBox.textContent = `✅ Successfully uploaded ${formattedQuestions.length} questions!`;
                         form.reset();
