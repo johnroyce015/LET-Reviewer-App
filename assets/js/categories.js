@@ -89,14 +89,17 @@ async function fetchLiveCategories() {
         cardWrapper.classList.add(currentTheme);
         clone.querySelector('.category-name').textContent = cat.category_name;
         
-        const URLSlug = cat.category_name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+        // 🟢 THE NEW LEVEL BADGE (No more URL slug!)
+        // If it somehow still says "Both" or is empty, we safely default it to Elementary
+        const levelText = (cat.exam_level && cat.exam_level !== 'Both') ? cat.exam_level.toUpperCase() : 'ELEMENTARY';
         
-        // 🟢 THE NEW LEVEL BADGE
-        const levelText = cat.exam_level ? cat.exam_level.toUpperCase() : 'BOTH';
-        const levelBadge = `<span style="background: #111827; color: #FFF; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; margin-left: 8px;">${levelText}</span>`;
+        // Upgraded the badge styling to look like a standalone pill
+        const levelBadge = `<span style="background: #111827; color: #FFF; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: inline-block; margin-bottom: 10px; box-shadow: 2px 2px 0px rgba(0,0,0,0.3);">
+            <i class="fa-solid fa-graduation-cap" style="margin-right: 4px;"></i> ${levelText}
+        </span>`;
         
-        // Injecting the URI slug and the Level Badge next to each other
-        clone.querySelector('.category-uri-tag').innerHTML = `/${URLSlug} ${levelBadge}`;
+        // Injecting ONLY the Level Badge into the slot
+        clone.querySelector('.category-uri-tag').innerHTML = levelBadge;
         
         clone.querySelector('.category-description').textContent = `Foundational materials and practice test vectors explicitly curated for comprehensive ${cat.category_name} review segments.`;
 
@@ -106,8 +109,10 @@ async function fetchLiveCategories() {
         clone.querySelector('.edit-card-square').onclick = () => {
             document.getElementById('editCategoryId').value = cat.id;
             document.getElementById('editCategoryName').value = cat.category_name;
-            // Set the dropdown to the correct saved level when editing!
-            document.getElementById('editCategoryLevel').value = cat.exam_level || 'Both';
+            
+            // Set the dropdown to strictly Elementary or Secondary
+            document.getElementById('editCategoryLevel').value = cat.exam_level === 'Secondary' ? 'Secondary' : 'Elementary';
+            
             document.getElementById('editCategoryModal').classList.remove('hidden');
         };
 

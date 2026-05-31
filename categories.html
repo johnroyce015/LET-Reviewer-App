@@ -1,80 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Categories Management - LET Reviewer</title>
-    
+
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
+
     <script src="assets/js/supabase.js" defer></script>
     <script src="assets/js/categories.js" defer></script>
     <script src="assets/js/modals.js" defer></script>
     <script src="assets/js/logout.js" defer></script>
 </head>
+
 <body style="visibility: hidden;">
 
-<div class="dashboard-layout">
-    
-    <aside class="sidebar">
-        <div>
-            <div class="sidebar-logo">
-                <div class="logo-icon">📖</div>
-                <span class="logo-text">LETReviewer</span>
+    <div class="dashboard-layout">
+
+        <aside class="sidebar">
+            <div>
+                <div class="sidebar-logo">
+                    <div class="logo-icon">📖</div>
+                    <span class="logo-text">LETReviewer</span>
+                </div>
+                <nav>
+                    <a href="dashboard.html" class="menu-item"><i class="fa-solid fa-table-cells-large"></i>
+                        Overview</a>
+                    <a href="questions.html" class="menu-item"><i class="fa-solid fa-circle-question"></i> Questions</a>
+                    <a href="categories.html" class="menu-item active"><i class="fa-solid fa-layer-group"></i>
+                        Categories</a>
+                    <a href="users.html" class="menu-item"><i class="fa-solid fa-users"></i> Users</a>
+                    <a href="activity.html" class="menu-item"><i class="fa-solid fa-clipboard-list"></i> Activity
+                        Log</a>
+                </nav>
             </div>
-            <nav>
-                <a href="dashboard.html" class="menu-item"><i class="fa-solid fa-table-cells-large"></i> Overview</a>
-                <a href="questions.html" class="menu-item"><i class="fa-solid fa-circle-question"></i> Questions</a>
-                <a href="categories.html" class="menu-item active"><i class="fa-solid fa-layer-group"></i> Categories</a>
-                <a href="users.html" class="menu-item"><i class="fa-solid fa-users"></i> Users</a>
-                <a href="activity.html" class="menu-item"><i class="fa-solid fa-clipboard-list"></i> Activity Log</a>
-            </nav>
-        </div>
-        <a href="#" id="logoutBtn" class="menu-item btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
-    </aside>
+            <a href="#" id="logoutBtn" class="menu-item btn-logout"><i class="fa-solid fa-right-from-bracket"></i>
+                Logout</a>
+        </aside>
 
-    <main class="dashboard-main">
-        
-        <div class="categories-page-header">
-            <div class="header-titles">
-                <h1>Categories Management</h1>
-                <p>Organize and manage the core subject areas for the Licensure Examination for Teachers.</p>
+        <main class="dashboard-main">
+
+            <div class="categories-page-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <div class="header-titles">
+
+                    <h1 style="margin-top: 0; margin-bottom: 8px;">Categories Management</h1>
+                    <p style="margin-top: 0; margin-bottom: 0;">Organize and manage the core subject areas for the
+                        Licensure Examination for Teachers.</p>
+                </div>
+
+                <div class="header-actions">
+                    <button onclick="window.location.href='bulk-upload.html'" class="neo-button btn-bulk-upload">
+                        <i class="fa-solid fa-file-import"></i> Bulk Upload
+                    </button>
+                </div>
             </div>
-            
-            <div class="header-actions">
-                <button onclick="window.location.href='bulk-upload.html'" class="neo-button btn-bulk-upload">
-                    <i class="fa-solid fa-file-import"></i> Bulk Upload
-                </button>
+
+            <div id="categoryContainer" class="categories-grid">
+                <h2>Loading categories...</h2>
             </div>
-        </div>
+        </main>
 
-        <div id="categoryContainer" class="categories-grid">
-            <h2>Loading categories...</h2>
-        </div>
-    </main>
+    </div>
 
-</div>
-
-<template id="categoryCardTemplate">
+    <template id="categoryCardTemplate">
     <div class="category-card">
         <div>
-            <div class="category-card-header">
-                <span class="status-badge">
-                    <span class="status-dot"></span>
-                    ACTIVE
-                </span>
-                <div class="category-actions">
+            <div class="category-card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;">
+                <h2 class="category-name" style="margin: 0; font-size: 22px; padding-right: 10px; line-height: 1.2;"></h2>
+                
+                <div class="category-actions" style="display: flex; gap: 8px; flex-shrink: 0;">
                     <button class="edit-card-square" title="Edit Category"><i class="fa-solid fa-pen"></i></button>
                     <button class="delete-card-square" title="Delete Category"><i class="fa-solid fa-trash"></i></button>
                 </div>
             </div>
             
-            <h2 class="category-name"></h2>
-            <span class="category-uri-tag"></span>
-            <p class="category-description"></p>
+            <div style="display: block; margin-top: 10px; margin-bottom: 4px;">
+                <span class="category-uri-tag"></span>
+            </div>
+            
+            <p class="category-description" style="margin-top: 0; margin-bottom: 15px;"></p>
         </div>
 
         <div class="category-card-footer">
@@ -85,78 +94,79 @@
     </div>
 </template>
 
-<template id="addCategoryTemplate">
-    <div class="add-category-card">
-        <div class="add-icon-wrapper">
-            <i class="fa-solid fa-plus"></i>
+    <template id="addCategoryTemplate">
+        <div class="add-category-card">
+            <div class="add-icon-wrapper">
+                <i class="fa-solid fa-plus"></i>
+            </div>
+            <h3>Create New Category</h3>
+            <p>Define a new subject area or specialization for review.</p>
         </div>
-        <h3>Create New Category</h3>
-        <p>Define a new subject area or specialization for review.</p>
-    </div>
-</template>
+    </template>
 
-<!-- ADD CATEGORY MODAL WITH EXAM LEVEL DROPDOWN -->
-<div id="addCategoryModal" class="modal-overlay hidden">
-    <div class="modal-content neo-brutal-modal" style="max-width: 500px;">
-        <div class="modal-header" style="background: #FDE68A;"> 
-            <h3><i class="fa-solid fa-plus"></i> Create New Category</h3>
-        </div>
-        <form id="addCategoryForm">
-            <div class="modal-body form-stack">
-                <div class="neo-form-group">
-                    <label class="neo-label">Category Name</label>
-                    <input type="text" id="newCategoryName" class="neo-input" placeholder="e.g., Physical Education" required>
-                </div>
-                
-                <!-- NEW EXAM LEVEL SELECT FIELD -->
-                <div class="neo-form-group" style="margin-top: 15px;">
-                    <label class="neo-label">Exam Level Target</label>
-                    <select id="newCategoryLevel" class="neo-input" required>
-                        <option value="Both">Both (Gen Ed / Prof Ed)</option>
-                        <option value="Elementary">Elementary Only</option>
-                        <option value="Secondary">Secondary Only (Majors)</option>
-                    </select>
-                </div>
+    <!-- ADD CATEGORY MODAL WITH EXAM LEVEL DROPDOWN -->
+    <div id="addCategoryModal" class="modal-overlay hidden">
+        <div class="modal-content neo-brutal-modal" style="max-width: 500px;">
+            <div class="modal-header" style="background: #FDE68A;">
+                <h3><i class="fa-solid fa-plus"></i> Create New Category</h3>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" id="cancelAddCategoryBtn">Cancel</button>
-                <button type="submit" class="btn-confirm">Create Category</button>
-            </div>
-        </form>
-    </div>
-</div>
+            <form id="addCategoryForm">
+                <div class="modal-body form-stack">
+                    <div class="neo-form-group">
+                        <label class="neo-label">Category Name</label>
+                        <input type="text" id="newCategoryName" class="neo-input" placeholder="e.g., Physical Education"
+                            required>
+                    </div>
 
-<!-- EDIT CATEGORY MODAL WITH EXAM LEVEL DROPDOWN -->
-<div id="editCategoryModal" class="modal-overlay hidden">
-    <div class="modal-content neo-brutal-modal">
-        <div class="modal-header" style="background: #C4B5FD;">
-            <h3><i class="fa-solid fa-pen"></i> Edit Category</h3>
+                    <!-- NEW EXAM LEVEL SELECT FIELD -->
+                    <div class="neo-form-group" style="margin-top: 15px;">
+                        <label class="neo-label">Exam Level Target</label>
+                        <select id="newCategoryLevel" class="neo-input" required>
+                            <option value="Elementary">Elementary Level</option>
+                            <option value="Secondary">Secondary Level</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" id="cancelAddCategoryBtn">Cancel</button>
+                    <button type="submit" class="btn-confirm">Create Category</button>
+                </div>
+            </form>
         </div>
-        <form id="editCategoryForm">
-            <input type="hidden" id="editCategoryId">
-            <div class="modal-body form-stack">
-                <div class="neo-form-group">
-                    <label class="neo-label">Category Name</label>
-                    <input type="text" id="editCategoryName" class="neo-input" required>
-                </div>
-                
-                <!-- NEW EXAM LEVEL SELECT FIELD -->
-                <div class="neo-form-group" style="margin-top: 15px;">
-                    <label class="neo-label">Exam Level Target</label>
-                    <select id="editCategoryLevel" class="neo-input" required>
-                        <option value="Both">Both (Gen Ed / Prof Ed)</option>
-                        <option value="Elementary">Elementary Only</option>
-                        <option value="Secondary">Secondary Only (Majors)</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" id="cancelEditCategoryBtn">Cancel</button>
-                <button type="submit" class="btn-confirm">Save Changes</button>
-            </div>
-        </form>
     </div>
-</div>
+
+    <!-- EDIT CATEGORY MODAL WITH EXAM LEVEL DROPDOWN -->
+    <div id="editCategoryModal" class="modal-overlay hidden">
+        <div class="modal-content neo-brutal-modal">
+            <div class="modal-header" style="background: #C4B5FD;">
+                <h3><i class="fa-solid fa-pen"></i> Edit Category</h3>
+            </div>
+            <form id="editCategoryForm">
+                <input type="hidden" id="editCategoryId">
+                <div class="modal-body form-stack">
+                    <div class="neo-form-group">
+                        <label class="neo-label">Category Name</label>
+                        <input type="text" id="editCategoryName" class="neo-input" required>
+                    </div>
+
+                    <!-- NEW EXAM LEVEL SELECT FIELD -->
+                    <div class="neo-form-group" style="margin-top: 15px;">
+                        <label class="neo-label">Exam Level Target</label>
+                        <select id="editCategoryLevel" class="neo-input" required>
+                            <option value="Both">Both (Gen Ed / Prof Ed)</option>
+                            <option value="Elementary">Elementary Only</option>
+                            <option value="Secondary">Secondary Only (Majors)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" id="cancelEditCategoryBtn">Cancel</button>
+                    <button type="submit" class="btn-confirm">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 </body>
+
 </html>
