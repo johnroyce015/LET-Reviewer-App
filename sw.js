@@ -1,5 +1,4 @@
-// 🟢 Bumped to v2 to force the browser to update the cache
-const CACHE_NAME = 'let-reviewer-student-v2';
+const CACHE_NAME = 'let-reviewer-student-v3';
 
 // We ONLY cache the files students need to take quizzes offline.
 const ASSETS_TO_CACHE = [
@@ -14,7 +13,7 @@ const ASSETS_TO_CACHE = [
     
     '/assets/css/student/pages/dashboard.css',
     '/assets/css/student/pages/layout.css', 
-    '/assets/css/global.css',
+    '/assets/css/style.css',
     
     '/assets/js/supabase.js',
     '/assets/js/offline-sync.js',
