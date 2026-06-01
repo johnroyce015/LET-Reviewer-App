@@ -78,6 +78,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPassword').value;
             const role = document.querySelector('input[name="role"]:checked').value;
+            
+            // 🟢 Grab the course from the dropdown (fallback to BSEd if not found)
+            const courseSelect = document.getElementById('userCourse');
+            const selectedCourse = courseSelect ? courseSelect.value : 'BSEd';
 
             const originalRegText = regSubmitBtn.innerHTML;
             regSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating...';
@@ -86,7 +90,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const { data, error } = await supabase.auth.signUp({
                 email: email,
                 password: password,
-                options: { data: { full_name: name, role: role } }
+                // 🟢 Save the course to the user metadata!
+                options: { data: { full_name: name, role: role, course: selectedCourse } }
             });
 
             if (error) {

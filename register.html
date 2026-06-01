@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account - LET Reviewer</title>
-    
+
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
@@ -13,6 +14,7 @@
     <script src="assets/js/admin/modals.js" defer></script>
     <script src="assets/js/auth.js" defer></script>
 </head>
+
 <body class="neo-auth-layout">
 
     <div class="neo-auth-left">
@@ -22,13 +24,14 @@
                 <h1 class="logo-text-large">LET Reviewer</h1>
             </div>
             <p class="hero-tagline">Structure for Success.</p>
-            <p class="hero-sub">Organized categories lead to focused study sessions and higher passing rates for your students.</p>
+            <p class="hero-sub">Organized categories lead to focused study sessions and higher passing rates for your
+                students.</p>
         </div>
     </div>
 
     <div class="neo-auth-right">
         <div class="neo-card">
-            
+
             <div class="neo-header">
                 <div class="neo-icon">📖</div>
                 <div class="neo-header-text">
@@ -53,6 +56,15 @@
                     <input type="password" id="regPassword" class="neo-input" required minlength="6">
                 </div>
 
+                <!-- Course Selection Dropdown -->
+                <div class="neo-form-group" id="courseGroup">
+                    <label class="neo-label">Course / Track</label>
+                    <select id="userCourse" class="neo-input">
+                        <option value="BSEd">Secondary Education (BSEd) - With Major</option>
+                        <option value="BEEd">Elementary Education (BEEd) - Gen/Prof Ed Only</option>
+                    </select>
+                </div>
+
                 <div class="neo-form-group">
                     <label class="neo-label">I am a...</label>
                     <div class="neo-role-toggle">
@@ -75,6 +87,7 @@
 
         </div>
     </div>
-    
+
 </body>
+
 </html>

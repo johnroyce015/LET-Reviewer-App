@@ -102,14 +102,14 @@
   box-shadow: 8px 8px 0px var(--brutal-black, #111827);
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Tightened from 20px */
+  gap: 15px; 
 }
 
 .neo-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 15px; /* Brought closer to the form */
+  margin-bottom: 15px; 
 }
 
 .neo-icon {
@@ -141,13 +141,13 @@
 .form-stack {
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Tightened from 18px */
+    gap: 12px; 
 }
 
 .neo-form-group {
     display: flex;
     flex-direction: column;
-    gap: 4px; /* Tightened from 8px to bring labels/inputs together */
+    gap: 4px; 
 }
 
 .neo-label {
@@ -158,7 +158,7 @@
 
 .neo-input {
     width: 100%;
-    padding: 12px 14px; /* Slightly slimmer padding */
+    padding: 12px 14px; 
     border: 2px solid #111827;
     border-radius: 10px;
     font-family: inherit;
@@ -188,13 +188,13 @@
     background: #C4B5FD;
     color: #111827;
     width: 100%;
-    padding: 14px; /* Perfectly scaled with inputs */
+    padding: 14px; 
     font-size: 16px;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 8px;
-    margin-top: 5px; /* Brings it right up to the inputs */
+    margin-top: 5px; 
 }
 
 .btn-login:hover {
@@ -210,7 +210,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 5px; /* Brings it right up to the inputs */
+    margin-top: 5px; 
 }
 
 .btn-register:hover {
@@ -245,4 +245,46 @@
   font-weight: 700;
   color: #111827;
   text-decoration: underline;
+}
+
+/* =========================================
+   PWA RESPONSIVENESS (MOBILE AUTH)
+========================================= */
+
+@media (max-width: 768px) {
+    .neo-auth-layout {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        min-height: 100vh;
+        background-color: #C4B5FD; 
+        
+        /* 🟢 ADDED: Neo-Brutalist Dots for Mobile */
+        background-image: radial-gradient(var(--brutal-black, #111827) 2px, transparent 2px);
+        background-size: 32px 32px;
+    }
+
+    .neo-auth-right {
+        width: 100%;
+        padding: 0;
+    }
+
+    .neo-auth-right .neo-card {
+        width: 100%;
+        max-width: 480px; 
+        padding: 30px 20px;
+        margin: 0;
+        border-radius: 16px;
+        box-shadow: 4px 4px 0px #111827; 
+    }
+
+    .neo-header {
+        flex-direction: row;
+        align-items: center;
+        gap: 15px;
+        text-align: left;
+        margin-bottom: 25px; 
+    }
 }

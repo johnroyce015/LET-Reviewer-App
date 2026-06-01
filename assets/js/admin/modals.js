@@ -21,7 +21,7 @@ window.showNeoModal = function({
         buttonsHtml += `<button class="btn-cancel" type="button">${cancelText}</button>`;
     }
     
-    buttonsHtml += `<button class="btn-confirm" style="background: ${confirmColor} !important;" type="button">${confirmText}</button>`;
+    buttonsHtml += `<button class="btn-confirm" style="background: ${confirmColor} !important; color: #ffffff !important;" type="button">${confirmText}</button>`;
 
     // Build the Input Box if required
     let inputHtml = '';

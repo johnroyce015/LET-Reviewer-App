@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insights - LET Reviewer</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase.js" defer></script>
+    <script src="../assets/js/script.js" defer></script>
+    <script src="../assets/js/student/insights.js" defer></script>
+    <script src="../assets/js/student/navigation.js" defer></script>
+</head>
+<body class="bg-slate hidden-body">
+<div class="mobile-app-container">
+    
+    <header class="app-topbar">
+        <div class="user-avatar clickable" id="openProfileSidebar" title="Profile Menu">
+            <i class="fa-solid fa-user"></i>
+        </div>
+        <div class="brand-name">LETReviewer</div>
+        <div class="notification-bell"><i class="fa-regular fa-bell"></i></div>
+    </header>
+
+    <main class="app-content">
+        <div class="page-header">
+            <h1 class="page-title">Performance Insights</h1>
+            <p class="page-desc">Overview for <span id="studentNameDisplay" class="insights-student-name">Student</span> (<span id="studentCourseDisplay"></span>)</p>
+        </div>
+
+        <div id="insightsContainer">
+            <div class="neo-card mobile-card white-card insights-empty-card">
+                <i class="fa-solid fa-chart-pie insights-icon"></i>
+                <h3 class="insights-empty-title">Analytics Engine Ready</h3>
+                <p class="insights-empty-desc">Once your exam history is saved to the cloud, your personalized mastery tracking will appear here.</p>
+            </div>
+        </div>
+        
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exams - LET Reviewer</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase.js" defer></script>
+    <script src="../assets/js/script.js" defer></script>
+    <script src="../assets/js/student/exams.js" defer></script>
+    <script src="../assets/js/student/navigation.js" defer></script>
+</head>
+<body class="bg-slate hidden-body">
+<div class="mobile-app-container">
+    
+    <header class="app-topbar">
+        <div class="user-avatar clickable" id="openProfileSidebar" title="Profile Menu">
+            <i class="fa-solid fa-user"></i>
+        </div>
+        <div class="brand-name">LETReviewer</div>
+        <div class="notification-bell"><i class="fa-regular fa-bell"></i></div>
+    </header>
+
+    <main class="app-content">
+        <div class="page-header">
+            <h1 class="page-title">Exam Simulation</h1>
+            <p class="page-desc">Prepare for the real deal. Take full-length mock exams or targeted practice tests.</p>
+        </div>
+
+        <h3 class="section-subtitle"><i class="fa-regular fa-calendar"></i> Upcoming Mock Exams</h3>
+        
+        <div class="neo-card mobile-card purple-card grand-exam-card">
+            <span class="mastery-pill grand-exam-pill"><i class="fa-solid fa-circle"></i> Offline Ready</span>
+            <h2 id="grandExamTitle" class="grand-exam-title">Grand Simulation</h2>
+            <p class="grand-exam-desc"><i class="fa-solid fa-book-open"></i> Full Coverage Exam</p>
+            <button class="neo-button btn-small grand-exam-btn">Enter Simulation</button>
+        </div>
+
+        <h3 class="section-subtitle"><i class="fa-solid fa-clipboard-list"></i> Practice Tests</h3>
+        
+        <div id="practiceTestsContainer" class="subject-stack">
+            <div class="state-loading">Fetching tests...</div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

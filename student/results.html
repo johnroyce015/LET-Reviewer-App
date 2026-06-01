@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Results - LET Reviewer</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/student/pages/results.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <script src="../assets/js/student/results.js" defer></script>
+</head>
+<body class="bg-slate">
+<div class="mobile-app-container results-layout">
+    
+    <header class="app-topbar text-center">
+        <div class="brand-name w-full">Exam Results</div>
+    </header>
+
+    <main class="app-content results-main">
+        
+        <div class="neo-card mobile-card white-card results-hero">
+            <i class="fa-solid fa-flag-checkered results-icon"></i>
+            <h2>Exam Completed!</h2>
+            <p id="resultCategory" class="subtitle text-gray">Loading subject...</p>
+            
+            <div class="score-box">
+                <div class="score-label">Final Score</div>
+                <div id="resultScore" class="score-number">--/--</div>
+            </div>
+            
+            <p id="resultMessage" class="result-msg"></p>
+        </div>
+
+        <div class="mistakes-section">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> Review Mistakes</h3>
+            <div id="mistakesContainer" class="mistakes-container">
+                <!-- JavaScript will inject wrong answers here -->
+            </div>
+        </div>
+
+        <button onclick="window.location.href='dashboard.html'" class="neo-button btn-return">
+            Return to Dashboard
+        </button>
+
+    </main>
+</div>
+</body>
+</html>

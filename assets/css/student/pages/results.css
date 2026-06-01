@@ -1,0 +1,137 @@
+/* =========================================
+   STUDENT RESULTS PAGE
+========================================= */
+
+.bg-slate {
+  background-color: #f8fafc;
+}
+.results-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.text-center {
+  text-align: center;
+}
+.w-full {
+  width: 100%;
+}
+
+.results-main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* HERO CARD */
+.results-hero {
+  width: 100%;
+  margin-bottom: 25px;
+  padding: 40px 20px;
+}
+.results-icon {
+  font-size: 40px;
+  color: #10b981;
+  margin-bottom: 15px;
+}
+.results-hero h2 {
+  margin: 0 0 5px 0;
+  font-size: 24px;
+}
+.text-gray {
+  color: #6b7280;
+}
+.subtitle {
+  font-size: 14px;
+  margin: 0 0 20px 0;
+}
+
+/* SCORE BOX */
+.score-box {
+  background: #fde68a;
+  border: 3px solid #111827;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+.score-label {
+  font-size: 14px;
+  font-weight: 800;
+  color: #374151;
+  text-transform: uppercase;
+}
+.score-number {
+  font-size: 56px;
+  font-weight: 900;
+  color: #111827;
+  line-height: 1;
+}
+.result-msg {
+  font-weight: 700;
+  font-size: 16px;
+  margin-top: 15px;
+}
+
+/* MISTAKES SECTION */
+.mistakes-section {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 30px;
+}
+.mistakes-section h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.mistakes-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* MISTAKE CARDS (Injected via JS) */
+.mistake-card {
+  background: #fee2e2;
+  border: 2px solid #ef4444;
+  padding: 15px;
+}
+.mistake-question {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.mistake-details {
+  font-size: 12px;
+}
+.mistake-user {
+  color: #ef4444;
+  margin-bottom: 5px;
+}
+.mistake-correct {
+  color: #10b981;
+  font-weight: 800;
+}
+
+/* PERFECT SCORE STATE */
+.perfect-card {
+  background: #d1fae5;
+  border: 2px solid #10b981;
+  text-align: center;
+  padding: 15px;
+}
+.perfect-msg {
+  margin: 0;
+  font-weight: 700;
+  color: #065f46;
+}
+
+/* RETURN BUTTON */
+.btn-return {
+  background: #111827;
+  color: white;
+  width: 100%;
+  padding: 18px;
+  font-size: 18px;
+}

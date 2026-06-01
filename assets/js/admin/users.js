@@ -166,11 +166,21 @@ window.deleteUser = function(userId, userEmail) {
                 return;
             }
 
-            // If PIN is correct, proceed with deletion
-            await supabase.from('profiles').delete().eq('id', userId);
+            // If PIN is correct, call the secure server-side function
+            const { error } = await supabase.rpc('delete_user_account', { target_user_id: userId });
+
+            if (error) {
+                window.showNeoModal({
+                    title: 'Deletion Failed',
+                    icon: 'fa-solid fa-triangle-exclamation',
+                    message: error.message,
+                    headerColor: '#FCA5A5'
+                });
+                return;
+            }
             
             await window.logSystemActivity('DELETE', `Revoked system access for: ${userEmail}`);
-            window.loadUsers(); 
+            window.loadUsers();
         }
     });
 };
