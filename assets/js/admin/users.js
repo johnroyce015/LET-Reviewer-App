@@ -1,25 +1,26 @@
 var supabase = window.supabaseClient;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    
+
     // 1. THE VIP BOUNCER
+    // 🌟 Note: 'session.user.email' is captured right here when the Admin first loads the page!
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !session) { window.location.href = '../login.html'; return; }
 
     const { data: profileData } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
-    if (!profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
-        window.location.href = 'index.html'; return;
+    const userRole = profileData && profileData.role ? profileData.role.toLowerCase() : 'student';
+
+    if (userRole !== 'teacher' && userRole !== 'admin') {
+        window.location.href = '../login.html'; return;
     }
 
-document.body.style.visibility = 'visible';
+    document.body.style.visibility = 'visible';
 
     const container = document.getElementById('usersContainer');
-    
-    // MODAL ELEMENTS
     const addUserModal = document.getElementById('addUserModal');
     const editUserModal = document.getElementById('editUserModal');
-    
-    // TOGGLES (No inline styles!)
+
+    // TOGGLES 
     document.getElementById('openAddUserBtn').addEventListener('click', () => addUserModal.classList.remove('hidden'));
     document.getElementById('cancelAddUserBtn').addEventListener('click', () => {
         addUserModal.classList.add('hidden');
@@ -30,9 +31,8 @@ document.body.style.visibility = 'visible';
         document.getElementById('editUserForm').reset();
     });
 
-    // 2. FETCH USERS FROM DATABASE (WITH REAL TIMESTAMPS)
-    window.loadUsers = async function() {
-        // We select all columns so we get last_active_at too!
+    // 2. FETCH USERS FROM DATABASE 
+    window.loadUsers = async function () {
         const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false });
 
         if (error || !data || data.length === 0) {
@@ -40,27 +40,25 @@ document.body.style.visibility = 'visible';
             return;
         }
 
-        container.innerHTML = ''; 
-        
-        // Calculate the exact time 24 hours ago
-        const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); 
+        container.innerHTML = '';
+        const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
         data.forEach(user => {
             const isCurrentUser = user.id === session.user.id;
-            
-            // 🔥 REAL TRACKER LOGIC: Are they the current user, or is their timestamp within the last 24 hours?
             const isOnline = isCurrentUser || (user.last_active_at && new Date(user.last_active_at) > twentyFourHoursAgo);
-            
+            const safeRole = user.role ? user.role.toLowerCase() : 'student';
+
             const row = document.createElement('div');
-            row.className = 'user-row'; // Keeping your original CSS class!
-            
+            row.className = 'user-row';
+
             row.innerHTML = `
                 <div class="user-name-text">${user.full_name || 'No Name Provided'}</div>
                 <div class="user-email-text">
                     ${user.email} ${isCurrentUser ? '<span class="user-you-badge">(You)</span>' : ''}
+                    <div class="questions-subtitle">${user.course || 'No Course Assigned'}</div>
                 </div>
                 <div>
-                    <span class="role-badge ${user.role === 'teacher' ? 'role-teacher' : 'role-student'}">
+                    <span class="role-badge role-${safeRole}">
                         ${user.role ? user.role.toUpperCase() : 'STUDENT'}
                     </span>
                 </div>
@@ -70,10 +68,10 @@ document.body.style.visibility = 'visible';
                     </span>
                 </div>
                 <div class="action-cell">
-                    <button onclick="openEditModal('${user.id}', '${user.full_name || ''}', '${user.role || 'student'}')" class="delete-user-btn" title="Edit User">
+                    <button class="delete-user-btn action-edit-btn" data-id="${user.id}" data-name="${user.full_name || ''}" data-role="${safeRole}" data-course="${user.course || 'BEEd'}" title="Edit User">
                         <i class="fa-solid fa-pen"></i>
                     </button>
-                    <button onclick="deleteUser('${user.id}', '${user.email}')" class="delete-user-btn ${isCurrentUser ? 'disabled-trash' : 'active-trash'}" ${isCurrentUser ? 'disabled' : ''} title="Revoke Access">
+                    <button class="delete-user-btn action-delete-btn ${isCurrentUser ? 'disabled-trash' : 'active-trash'}" data-id="${user.id}" data-email="${user.email}" ${isCurrentUser ? 'disabled' : ''} title="Revoke Access">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
@@ -82,103 +80,131 @@ document.body.style.visibility = 'visible';
         });
     }
 
+    // EVENT DELEGATION FOR EDIT AND DELETE BUTTONS
+    container.addEventListener('click', (e) => {
+        const editBtn = e.target.closest('.action-edit-btn');
+        if (editBtn) {
+            document.getElementById('editUserId').value = editBtn.getAttribute('data-id');
+            document.getElementById('editName').value = editBtn.getAttribute('data-name');
+            document.getElementById('editRole').value = editBtn.getAttribute('data-role');
+            document.getElementById('editCourse').value = editBtn.getAttribute('data-course');
+            editUserModal.classList.remove('hidden');
+        }
+
+        const deleteBtn = e.target.closest('.action-delete-btn');
+        if (deleteBtn && !deleteBtn.hasAttribute('disabled')) {
+            window.deleteUser(deleteBtn.getAttribute('data-id'), deleteBtn.getAttribute('data-email'));
+        }
+    });
+
     // 3. HANDLE ACCOUNT CREATION
     document.getElementById('addUserForm').addEventListener('submit', async (e) => {
-        e.preventDefault(); 
-        
+        e.preventDefault();
+
         const name = document.getElementById('newName').value;
         const email = document.getElementById('newEmail').value;
         const password = document.getElementById('newPassword').value;
-        const role = document.getElementById('newRole').value;
+        const role = document.getElementById('newRole').value.toLowerCase();
+        const course = document.getElementById('newCourse').value;
 
         const { error } = await supabase.auth.signUp({
             email: email,
             password: password,
-            options: { data: { full_name: name, role: role } }
+            options: { data: { full_name: name, role: role, course: course } } 
         });
 
         if (error) {
             window.showNeoModal({ title: 'Creation Failed', icon: 'fa-solid fa-triangle-exclamation', message: error.message, headerColor: '#FCA5A5' });
         } else {
-            // 🔥 THE NEW TRACKER!
-            await window.logSystemActivity('CREATE', `Added a new ${role} account for ${email}`);
-            
+            // 🌟 FIX: Pass 'session.user.email' into the logger so it registers under the Admin's name!
+            await window.logSystemActivity('CREATE', `Added a new ${role} account for ${email}`, session.user.email);
             addUserModal.classList.add('hidden');
-            document.getElementById('addUserForm').reset(); 
-            window.loadUsers(); 
+            document.getElementById('addUserForm').reset();
+            window.loadUsers();
         }
     });
 
-    // 4. HANDLE ACCOUNT EDITING
-    window.openEditModal = function(id, currentName, currentRole) {
-        document.getElementById('editUserId').value = id;
-        document.getElementById('editName').value = currentName;
-        document.getElementById('editRole').value = currentRole;
-        editUserModal.classList.remove('hidden');
-    };
-
+    // 4. HANDLE ACCOUNT EDITING (WITH PIN SECURITY)
     document.getElementById('editUserForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const id = document.getElementById('editUserId').value;
         const newName = document.getElementById('editName').value;
-        const newRole = document.getElementById('editRole').value;
+        const newRole = document.getElementById('editRole').value.toLowerCase();
+        const newCourse = document.getElementById('editCourse').value;
 
-        const { error } = await supabase.from('profiles').update({ full_name: newName, role: newRole }).eq('id', id);
+        editUserModal.classList.add('hidden');
 
-        if (error) {
-            window.showNeoModal({ title: 'Update Failed', icon: 'fa-solid fa-triangle-exclamation', message: error.message, headerColor: '#FCA5A5' });
-        } else {
-            // 🔥 THE NEW TRACKER!
-            await window.logSystemActivity('UPDATE', `Modified user profile for: ${newName}`);
+        window.showNeoModal({
+            title: 'Security Authorization',
+            icon: 'fa-solid fa-lock',
+            message: `Enter the Admin PIN to confirm profile changes for <b>${newName}</b>.`,
+            requireInput: true,
+            inputType: 'password',
+            inputPlaceholder: 'Enter 6-digit PIN',
+            headerColor: '#FCA5A5',
+            confirmColor: '#10B981',
+            confirmText: 'Verify & Save',
+            cancelText: 'Cancel',
+            onCancel: () => {
+                editUserModal.classList.remove('hidden');
+            },
+            onConfirm: async (pin) => {
+                if (pin !== '123456') { 
+                    window.showNeoModal({
+                        title: 'Access Denied',
+                        icon: 'fa-solid fa-triangle-exclamation',
+                        message: 'Incorrect Security PIN. Action aborted.',
+                        headerColor: '#FCA5A5'
+                    });
+                    return;
+                }
 
-            editUserModal.classList.add('hidden');
-            window.loadUsers();
-        }
+                const { error } = await supabase.from('profiles').update({
+                    full_name: newName,
+                    role: newRole,
+                    course: newCourse
+                }).eq('id', id);
+
+                if (error) {
+                    window.showNeoModal({ title: 'Update Failed', icon: 'fa-solid fa-triangle-exclamation', message: error.message, headerColor: '#FCA5A5' });
+                } else {
+                    await window.logSystemActivity('UPDATE', `Modified user profile for: ${newName}`);
+                    window.loadUsers();
+                }
+            }
+        });
     });
 
     window.loadUsers();
 });
 
-// 5. SECURE DELETE FUNCTION (WITH PIN CONFIRMATION)
-window.deleteUser = function(userId, userEmail) {
+// 5. SECURE DELETE FUNCTION
+window.deleteUser = function (userId, userEmail) {
     window.showNeoModal({
         title: 'Security Authorization',
         icon: 'fa-solid fa-lock',
         message: `Enter the Admin PIN to permanently revoke access for <b>${userEmail}</b>.`,
         requireInput: true,
-        inputType: 'password', // Hides the characters as they type!
+        inputType: 'password',
         inputPlaceholder: 'Enter 6-digit PIN',
         headerColor: '#FCA5A5',
         confirmColor: '#EF4444',
         confirmText: 'Verify & Revoke',
         cancelText: 'Cancel',
         onConfirm: async (pin) => {
-            
-            // Check the PIN!
             if (pin !== '123456') {
-                window.showNeoModal({ 
-                    title: 'Access Denied', 
-                    icon: 'fa-solid fa-triangle-exclamation', 
-                    message: 'Incorrect Security PIN. Action aborted.', 
-                    headerColor: '#FCA5A5' 
-                });
+                window.showNeoModal({ title: 'Access Denied', icon: 'fa-solid fa-triangle-exclamation', message: 'Incorrect Security PIN. Action aborted.', headerColor: '#FCA5A5' });
                 return;
             }
 
-            // If PIN is correct, call the secure server-side function
             const { error } = await supabase.rpc('delete_user_account', { target_user_id: userId });
 
             if (error) {
-                window.showNeoModal({
-                    title: 'Deletion Failed',
-                    icon: 'fa-solid fa-triangle-exclamation',
-                    message: error.message,
-                    headerColor: '#FCA5A5'
-                });
+                window.showNeoModal({ title: 'Deletion Failed', icon: 'fa-solid fa-triangle-exclamation', message: error.message, headerColor: '#FCA5A5' });
                 return;
             }
-            
+
             await window.logSystemActivity('DELETE', `Revoked system access for: ${userEmail}`);
             window.loadUsers();
         }

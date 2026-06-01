@@ -2,16 +2,18 @@ var supabase = window.supabaseClient;
 
 document.addEventListener('DOMContentLoaded', async () => {
     
-    // 1. VIP BOUNCER (Only Teachers/Admins can view logs)
+    // 1. VIP BOUNCER (Case-Insensitive & Fixed Path)
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !session) { window.location.href = '../login.html'; return; }
 
     const { data: profileData } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
-    if (!profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
-        window.location.href = 'index.html'; return; 
+    const userRole = profileData && profileData.role ? profileData.role.toLowerCase() : 'student';
+
+    if (userRole !== 'teacher' && userRole !== 'admin') {
+        window.location.href = '../login.html'; return; 
     }
 
-document.body.style.visibility = 'visible';
+    document.body.style.visibility = 'visible';
 
     // Bind function globally so the Refresh button works
     window.fetchLiveLogs = fetchLiveLogs;
@@ -30,7 +32,7 @@ async function fetchLiveLogs() {
         .from('activity_logs')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(50); // Only load the 50 most recent to keep the app fast
+        .limit(50); 
 
     if (error) {
         container.innerHTML = `<div class="loading-state" style="color: #EF4444;">Database Error: ${error.message}</div>`;
@@ -51,7 +53,6 @@ async function fetchLiveLogs() {
     logs.forEach(log => {
         const clone = template.content.cloneNode(true);
         
-        // Format Date (e.g., "Oct 24, 2026, 2:30 PM")
         const dateObj = new Date(log.created_at);
         const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ', ' + 
                               dateObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
@@ -60,13 +61,11 @@ async function fetchLiveLogs() {
         clone.querySelector('.user-email-text').textContent = log.user_email;
         clone.querySelector('.log-desc').textContent = log.description;
 
-        // Apply Color Badge Based on Action Type
         const badge = clone.querySelector('.action-badge');
         badge.textContent = log.action_type;
         
         const type = log.action_type.toLowerCase();
         
-        // 🟢 Added 'upload' to the Create (Green) badge styling!
         if (type.includes('create') || type.includes('add') || type.includes('upload')) {
             badge.classList.add('action-create');
         }

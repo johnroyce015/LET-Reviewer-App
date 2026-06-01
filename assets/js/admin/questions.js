@@ -2,15 +2,18 @@ var supabase = window.supabaseClient;
 let allQuestions = []; 
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // VIP BOUNCER
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !session) { window.location.href = '../login.html'; return; }
 
     const { data: profileData } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
-    if (!profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
-        window.location.href = 'index.html'; return; 
+    const userRole = profileData && profileData.role ? profileData.role.toLowerCase() : 'student';
+
+    if (userRole !== 'teacher' && userRole !== 'admin') {
+        window.location.href = '../login.html'; return; 
     }
 
-document.body.style.visibility = 'visible';
+    document.body.style.visibility = 'visible';
 
     await fetchLiveQuestions();
 
@@ -38,9 +41,7 @@ document.body.style.visibility = 'visible';
         if (error) {
             window.showNeoModal({ title: 'Update Failed', message: error.message, headerColor: '#FCA5A5' });
         } else {
-            // 🔥 THE NEW TRACKER!
             await window.logSystemActivity('UPDATE', `Edited question ID #${id}`);
-
             editModal.classList.add('hidden');
             await fetchLiveQuestions(); 
         }
@@ -139,7 +140,6 @@ window.deleteQuestion = async function(id) {
         onConfirm: async () => {
             const { error } = await supabase.from('questions').delete().eq('id', id);
             if(!error) {
-                // 🔥 THE NEW TRACKER!
                 await window.logSystemActivity('DELETE', `Deleted a mock exam question`);
                 fetchLiveQuestions(); 
             } else { window.showNeoModal({ title: 'Error', message: error.message, headerColor: '#FCA5A5' }); }

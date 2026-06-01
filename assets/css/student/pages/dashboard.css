@@ -1,7 +1,6 @@
 /* =========================================
    STUDENT MOBILE-FIRST LAYOUT
 ========================================= */
-
 body {
     margin: 0;
     background-color: #F8FAFC;
@@ -43,6 +42,7 @@ body {
     border: 2px solid #111827;
     border-radius: 50%;
     display: flex; justify-content: center; align-items: center;
+    cursor: pointer;
 }
 
 .brand-name {
@@ -82,75 +82,61 @@ body {
     line-height: 1.2;
 }
 
-/* Figma Card Styles */
-.mobile-card {
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 4px 4px 0px #111827;
-}
-
-.purple-card { background: #A78BFA; color: #111827; }
-.white-card { background: #ffffff; color: #111827; }
-.yellow-card { background: #FDE68A; color: #111827; }
-.green-card { background: #6EE7B7; color: #111827; }
-
-/* Status & Progress */
-.status-pill {
-    display: inline-block;
-    background: #FDE68A;
-    border: 2px solid #111827;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 800;
-    border-radius: 20px;
-}
-
-.progress-track {
-    width: 100%;
-    height: 12px;
-    background: #E5E7EB;
-    border: 2px solid #111827;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    height: 100%;
-    border-right: 2px solid #111827;
-}
-
-/* Subjects */
+/* =========================================
+   VIBRANT SUBJECTS GRID
+========================================= */
 .subject-stack {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 15px;
+    margin-top: 15px;
 }
 
 .subject-card {
+    background: #ffffff;
+    border: 3px solid #111827;
+    border-radius: 12px;
+    padding: 15px;
     display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px 20px;
+    flex-direction: column;
+    gap: 10px;
     cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 4px 4px 0px #111827;
+}
+
+.subject-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 6px 6px 0px #111827;
 }
 
 .subject-icon {
     width: 40px; height: 40px;
-    background: #ffffff;
     border: 2px solid #111827;
     border-radius: 8px;
     display: flex; justify-content: center; align-items: center;
-    font-size: 18px;
+    font-size: 20px;
+    margin-bottom: 5px;
 }
 
-.mastery-pill {
-    background: transparent;
-    border: 1px solid #111827;
-    padding: 2px 8px;
-    border-radius: 10px;
+/* Dynamic Color Classes */
+.bg-math { background: #FDE68A; }
+.bg-english { background: #6EE7B7; }
+.bg-social { background: #FCA5A5; }
+.bg-filipino { background: #93C5FD; }
+
+.subject-info h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 900;
+    color: #111827;
+}
+
+.subject-info p {
+    margin: 0;
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 600;
+    color: #6B7280;
 }
 
 /* Bottom Navigation */
