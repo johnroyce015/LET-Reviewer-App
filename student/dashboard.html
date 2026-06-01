@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Home - LET Reviewer</title>
+    
+    <link rel="manifest" href="/manifest.json">
+
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
@@ -62,7 +65,6 @@
                 <span>78/100</span>
             </div>
             <div class="progress-track">
-                <!-- Using inline width here is acceptable as it is a dynamic data value, not static styling, but controlled via class structure -->
                 <div class="progress-fill" style="width: 78%; background: #6EE7B7;"></div>
             </div>
         </div>
@@ -76,9 +78,32 @@
             <div class="state-loading">Fetching your review modules...</div>
         </div>
 
-</div>
+            <div class="mobile-card white-card subject-card" style="border: 2px solid #111827;">
+                <div class="subject-icon">🌍</div>
+                <div style="flex-grow: 1;">
+                    <h4 style="margin:0; font-size: 16px;">Major: Social Studies</h4>
+                    <div style="font-size: 12px; color: #4B5563; font-weight: 600; margin-top: 2px;">
+                        📚 Secondary Level
+                    </div>
+                </div>
+                <button onclick="startQuiz('Social Studies')" style="background: #6EE7B7; color: #111827; border: 2px solid #111827; padding: 6px 12px; border-radius: 8px; font-weight: 900; font-size: 12px; cursor: pointer; box-shadow: 2px 2px 0px #111827;">
+                    Review ➡️
+                </button>
+            </div>
+
+        </div>
     </main>
 
 </div>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('✅ SW Registered on this page'))
+                .catch(err => console.error('❌ SW Failed', err));
+        });
+    }
+</script>
 </body>
 </html>

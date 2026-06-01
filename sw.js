@@ -1,7 +1,6 @@
-const CACHE_NAME = 'let-reviewer-student-v1';
+const CACHE_NAME = 'let-reviewer-student-v3';
 
 // We ONLY cache the files students need to take quizzes offline.
-// Notice we are ignoring the /admin/ folder completely!
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
@@ -11,9 +10,11 @@ const ASSETS_TO_CACHE = [
     '/student/dashboard.html',
     '/student/quiz.html',
     '/student/results.html',
-    '/assets/css/global.css',
-    '/assets/css/student/dashboard.css',
-    '/assets/css/student/quiz.css',
+    
+    '/assets/css/student/pages/dashboard.css',
+    '/assets/css/student/pages/layout.css', 
+    '/assets/css/style.css',
+    
     '/assets/js/supabase.js',
     '/assets/js/offline-sync.js',
     '/assets/js/student/dashboard.js',
@@ -49,7 +50,7 @@ self.addEventListener('activate', (event) => {
 
 // 3. FETCH EVENT: Intercept requests and serve from cache if offline
 self.addEventListener('fetch', (event) => {
-    // Only intercept basic GET requests (ignore Supabase API calls for now)
+    // Only intercept basic GET requests
     if (event.request.method !== 'GET') return;
 
     event.respondWith(
