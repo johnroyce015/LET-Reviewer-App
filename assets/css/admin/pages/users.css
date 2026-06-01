@@ -1,83 +1,187 @@
 /* ====================================
    USERS PAGE (Strict CSS)
 ==================================== */
-.users-page { padding: 0; }
-.hidden { display: none !important; }
+.users-page {
+  padding: 0;
+}
+.hidden {
+  display: none !important;
+}
 
 /* 5 Column Grid Layouts */
-.user-table-grid { 
-    display: grid;
-    grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr;
-    padding: 15px 20px;
-    background: #FDE68A; 
-    border: 3px solid #111827;
-    border-radius: 12px 12px 0 0;
-    font-weight: 800;
-    margin-top: 20px;
-    border-bottom: 2px solid #111827; 
+.user-table-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr;
+  padding: 15px 20px;
+  background: #fde68a;
+  border: 3px solid #111827;
+  border-radius: 12px 12px 0 0;
+  font-weight: 800;
+  margin-top: 20px;
+  border-bottom: 2px solid #111827;
 }
 
 .user-row {
-    display: grid; 
-    grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr; 
-    padding: 15px 20px; 
-    border-left: 3px solid #111827;
-    border-right: 3px solid #111827;
-    border-bottom: 2px solid #111827; 
-    align-items: center; 
-    background: #FFFFFF; 
-    font-weight: 500;
+  display: grid;
+  grid-template-columns: 1.5fr 1.5fr 1fr 1fr 1fr;
+  padding: 15px 20px;
+  border-left: 3px solid #111827;
+  border-right: 3px solid #111827;
+  border-bottom: 2px solid #111827;
+  align-items: center;
+  background: #ffffff;
+  font-weight: 500;
 }
 
 .user-row:last-child {
-    border-bottom: 3px solid #111827;
-    border-radius: 0 0 12px 12px;
+  border-bottom: 3px solid #111827;
+  border-radius: 0 0 12px 12px;
 }
 
 /* User Info */
-.user-name-text { font-weight: 900; color: #111827; }
-.user-email-text { font-weight: 700; color: #111827; }
-.user-you-badge { color: #7C3AED; font-size: 12px; margin-left: 5px; font-weight: 800; }
+.user-name-text {
+  font-weight: 900;
+  color: #111827;
+}
+.user-email-text {
+  font-weight: 700;
+  color: #111827;
+}
+.user-you-badge {
+  color: #7c3aed;
+  font-size: 12px;
+  margin-left: 5px;
+  font-weight: 800;
+}
 
 /* Role Badges */
 .role-badge {
-    color: #111827; 
-    padding: 4px 10px; 
-    border-radius: 6px; 
-    font-size: 12px; 
-    font-weight: 800; 
-    border: 2px solid #111827;
+  color: #111827;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  border: 2px solid #111827;
 }
-.role-teacher { background: #C4B5FD; }
-.role-student { background: #FDE68A; }
+.role-teacher {
+  background: #c4b5fd;
+}
+.role-student {
+  background: #fde68a;
+}
 
 /* Status Badges */
-.status-text { font-weight: bold; }
-.status-online { color: #10B981; }
-.status-offline { color: #9CA3AF; }
+.status-text {
+  font-weight: bold;
+}
+.status-online {
+  color: #10b981;
+}
+.status-offline {
+  color: #9ca3af;
+}
 
 /* Action Buttons */
-.action-cell { display: flex; gap: 10px; }
+.action-cell {
+  display: flex;
+  gap: 10px;
+}
 .delete-user-btn {
-    border-radius: 6px; 
-    width: 36px; 
-    height: 36px; 
-    border: 2px solid #111827;
-    background: #FFFFFF;
-    font-size: 13px;
-    transition: 0.2s ease;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  border: 2px solid #111827;
+  background: #ffffff;
+  font-size: 13px;
+  transition: 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.delete-user-btn:hover:not(:disabled) { 
-    transform: translateY(-2px); 
-    box-shadow: 2px 2px 0 #111827; 
+.delete-user-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 2px 2px 0 #111827;
 }
-.active-trash { color: #EF4444; }
-.disabled-trash { color: #9CA3AF; cursor: not-allowed; opacity: 0.6; }
+.active-trash {
+  color: #ef4444;
+}
+.disabled-trash {
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
 
 @media (max-width: 950px) {
-    .user-table-grid, .user-row { grid-template-columns: 1fr; gap: 10px; }
+  .user-table-grid,
+  .user-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+/* ====================================
+   LOCK PAGE & SCROLL CONTAINER
+==================================== */
+/* 1. Permanently lock the browser window from scrolling */
+body {
+  overflow: hidden !important;
+}
+
+/* 2. Turn the main layout into a flexible column */
+.dashboard-main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.questions-page {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-height: 0; /* Crucial: stops the container from blowing past the screen bottom */
+  padding-bottom: 20px;
+}
+
+/* 3. Tell the container to automatically fill the remaining space perfectly */
+#usersContainer {
+  flex-grow: 1;
+  overflow-y: auto;
+  min-height: 0;
+
+  border-left: 3px solid #111827;
+  border-right: 3px solid #111827;
+  border-bottom: 3px solid #111827;
+  border-radius: 0 0 12px 12px;
+  background: #ffffff;
+}
+
+/* Remove redundant outer borders from the inner rows */
+#usersContainer .user-row {
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+}
+
+#usersContainer .user-row:last-child {
+  border-bottom: none;
+}
+
+/* ====================================
+   CUSTOM BRUTALIST SCROLLBAR
+==================================== */
+#usersContainer::-webkit-scrollbar {
+  width: 14px;
+}
+#usersContainer::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-left: 3px solid #111827;
+  border-bottom-right-radius: 8px;
+}
+#usersContainer::-webkit-scrollbar-thumb {
+  background: #c4b5fd;
+  border-left: 3px solid #111827;
+  border-bottom: 3px solid #111827;
+}
+#usersContainer::-webkit-scrollbar-thumb:hover {
+  background: #a78bfa;
 }

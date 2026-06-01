@@ -1,5 +1,7 @@
 var supabase = window.supabaseClient;
 let allQuestions = []; 
+let currentFiltered = []; // 🟢 NEW: Stores the current search results
+let displayLimit = 50;    // 🟢 NEW: Controls how many cards load at once
 
 document.addEventListener('DOMContentLoaded', async () => {
     // VIP BOUNCER
@@ -72,21 +74,26 @@ function filterQuestions() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const selectedCat = document.getElementById('categoryFilter').value;
 
-    const filtered = allQuestions.filter(q => {
+    // 🟢 CHANGED: Save the filtered list globally so the "Load More" button knows what to display
+    currentFiltered = allQuestions.filter(q => {
         const matchesSearch = q.question_text.toLowerCase().includes(searchTerm);
         const matchesCat = selectedCat === 'All' || q.category === selectedCat;
         return matchesSearch && matchesCat;
     });
 
-    renderQuestions(filtered);
+    displayLimit = 50; // Reset the limit every time a new search is typed
+    renderQuestions(); // Call without arguments
 }
 
-function renderQuestions(questionsArray) {
+function renderQuestions() { // 🟢 CHANGED: Removed arguments to rely on global states
     const container = document.getElementById('questionsContainer');
-    if (questionsArray.length === 0) { container.innerHTML = `<div class="loading-state">No matching questions found.</div>`; return; }
+    if (currentFiltered.length === 0) { container.innerHTML = `<div class="loading-state">No matching questions found.</div>`; return; }
     container.innerHTML = ''; 
 
-    questionsArray.forEach(q => {
+    // 🟢 NEW: Slice the array to only draw up to the displayLimit to prevent lag
+    const toDisplay = currentFiltered.slice(0, displayLimit);
+
+    toDisplay.forEach(q => {
         const isA = q.correct_answer === 'A' ? 'correct' : '';
         const isB = q.correct_answer === 'B' ? 'correct' : '';
         const isC = q.correct_answer === 'C' ? 'correct' : '';
@@ -117,6 +124,42 @@ function renderQuestions(questionsArray) {
         `;
         container.appendChild(card);
     });
+
+    // 🟢 NEW LAZY LOADING UI: Add a "Load More" button if there are undisplayed questions
+    if (currentFiltered.length > displayLimit) {
+        const remainingCount = currentFiltered.length - displayLimit;
+        
+        const loadMoreWrapper = document.createElement('div');
+        loadMoreWrapper.style.textAlign = 'center';
+        loadMoreWrapper.style.padding = '20px 0';
+
+        const loadMoreBtn = document.createElement('button');
+        loadMoreBtn.innerHTML = `Load More (${remainingCount} remaining) <i class="fa-solid fa-angle-down"></i>`;
+        
+        // Brutalist UI Styling for the button
+        loadMoreBtn.style.padding = '12px 24px';
+        loadMoreBtn.style.background = '#C4B5FD';
+        loadMoreBtn.style.color = '#111827';
+        loadMoreBtn.style.border = '3px solid #111827';
+        loadMoreBtn.style.borderRadius = '8px';
+        loadMoreBtn.style.fontWeight = '900';
+        loadMoreBtn.style.cursor = 'pointer';
+        loadMoreBtn.style.boxShadow = '4px 4px 0px #111827';
+        loadMoreBtn.style.transition = 'all 0.1s ease';
+
+        // Hover Effects
+        loadMoreBtn.onmouseover = () => { loadMoreBtn.style.transform = 'translateY(-2px)'; };
+        loadMoreBtn.onmouseout = () => { loadMoreBtn.style.transform = 'translateY(0)'; };
+
+        // Click Action
+        loadMoreBtn.onclick = () => {
+            displayLimit += 50; // Increase the cap by 50
+            renderQuestions();  // Redraw the list
+        };
+
+        loadMoreWrapper.appendChild(loadMoreBtn);
+        container.appendChild(loadMoreWrapper);
+    }
 }
 
 window.openEditModal = function(id) {

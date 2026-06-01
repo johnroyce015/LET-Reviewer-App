@@ -236,3 +236,53 @@
     align-items: stretch;
   }
 }
+/* ====================================
+   LOCK PAGE & SCROLL CONTAINER
+==================================== */
+/* 1. Permanently lock the browser window from scrolling */
+body {
+  overflow: hidden !important;
+}
+
+/* 2. Turn the main layout into a flexible column */
+.dashboard-main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.questions-page {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-height: 0;
+  padding-bottom: 20px;
+}
+
+/* 3. Tell the container to fill exact remaining space */
+#questionsContainer {
+  flex-grow: 1;
+  overflow-y: auto;
+  min-height: 0;
+
+  padding-right: 15px;
+  padding-bottom: 20px;
+}
+
+/* ====================================
+   CUSTOM BRUTALIST SCROLLBAR
+==================================== */
+#questionsContainer::-webkit-scrollbar {
+  width: 14px;
+}
+#questionsContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+#questionsContainer::-webkit-scrollbar-thumb {
+  background: #c4b5fd;
+  border: 2px solid #111827;
+  border-radius: 10px;
+}
+#questionsContainer::-webkit-scrollbar-thumb:hover {
+  background: #a78bfa;
+}
