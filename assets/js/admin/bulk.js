@@ -2,11 +2,15 @@ var supabase = window.supabaseClient;
 
 document.addEventListener('DOMContentLoaded', async () => {
 
-    // VIP Bouncer
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-        window.location.href = '../login.html';
-        return;
+    // VIP Bouncer (Upgraded to full role check)
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError || !session) { window.location.href = '../login.html'; return; }
+
+    const { data: profileData } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
+    const userRole = profileData && profileData.role ? profileData.role.toLowerCase() : 'student';
+
+    if (userRole !== 'teacher' && userRole !== 'admin') {
+        window.location.href = '../login.html'; return; 
     }
 
     const fileInput = document.getElementById("fileInput");
@@ -84,7 +88,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         messageBox.style.color = '#EF4444';
                         messageBox.textContent = "Upload Failed: " + error.message;
                     } else {
-                        // 🟢 Use our newly fixed Global Logger!
                         if (typeof window.logSystemActivity === 'function') {
                             await window.logSystemActivity('UPLOAD', `Bulk uploaded ${formattedQuestions.length} questions to ${selectedCategory}`);
                         } else {

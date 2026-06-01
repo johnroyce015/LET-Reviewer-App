@@ -1,10 +1,13 @@
 document.addEventListener('DOMContentLoaded', async () => {
+    // 1. VIP Bouncer (Case-Insensitive & Fixed Path)
     const { data: { session }, error: sessionError } = await window.supabaseClient.auth.getSession();
     if (sessionError || !session) { window.location.href = '../login.html'; return; }
 
     const { data: profileData } = await window.supabaseClient.from('profiles').select('role').eq('id', session.user.id).single();
-    if (!profileData || (profileData.role !== 'teacher' && profileData.role !== 'admin')) {
-        window.location.href = 'index.html'; return;
+    const userRole = profileData && profileData.role ? profileData.role.toLowerCase() : 'student';
+
+    if (userRole !== 'teacher' && userRole !== 'admin') {
+        window.location.href = '../login.html'; return;
     }
 
     document.body.style.visibility = 'visible';
@@ -20,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('addCategoryForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const newName = document.getElementById('newCategoryName').value;
-            const newLevel = document.getElementById('newCategoryLevel').value; // NEW FIELD!
+            const newLevel = document.getElementById('newCategoryLevel').value;
 
             const { error } = await window.supabaseClient.from('categories').insert([{ 
                 category_name: newName,
@@ -49,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.preventDefault();
             const id = document.getElementById('editCategoryId').value;
             const newName = document.getElementById('editCategoryName').value;
-            const newLevel = document.getElementById('editCategoryLevel').value; // NEW FIELD!
+            const newLevel = document.getElementById('editCategoryLevel').value; 
 
             const { error } = await window.supabaseClient.from('categories').update({ 
                 category_name: newName,
@@ -89,18 +92,13 @@ async function fetchLiveCategories() {
         cardWrapper.classList.add(currentTheme);
         clone.querySelector('.category-name').textContent = cat.category_name;
         
-        // 🟢 THE NEW LEVEL BADGE (No more URL slug!)
-        // If it somehow still says "Both" or is empty, we safely default it to Elementary
         const levelText = (cat.exam_level && cat.exam_level !== 'Both') ? cat.exam_level.toUpperCase() : 'ELEMENTARY';
         
-        // Upgraded the badge styling to look like a standalone pill
         const levelBadge = `<span style="background: #111827; color: #FFF; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: inline-block; margin-bottom: 10px; box-shadow: 2px 2px 0px rgba(0,0,0,0.3);">
             <i class="fa-solid fa-graduation-cap" style="margin-right: 4px;"></i> ${levelText}
         </span>`;
         
-        // Injecting ONLY the Level Badge into the slot
         clone.querySelector('.category-uri-tag').innerHTML = levelBadge;
-        
         clone.querySelector('.category-description').textContent = `Foundational materials and practice test vectors explicitly curated for comprehensive ${cat.category_name} review segments.`;
 
         const { count } = await window.supabaseClient.from('questions').select('*', { count: 'exact', head: true }).eq('category', cat.category_name);
@@ -109,10 +107,7 @@ async function fetchLiveCategories() {
         clone.querySelector('.edit-card-square').onclick = () => {
             document.getElementById('editCategoryId').value = cat.id;
             document.getElementById('editCategoryName').value = cat.category_name;
-            
-            // Set the dropdown to strictly Elementary or Secondary
             document.getElementById('editCategoryLevel').value = cat.exam_level === 'Secondary' ? 'Secondary' : 'Elementary';
-            
             document.getElementById('editCategoryModal').classList.remove('hidden');
         };
 
@@ -127,7 +122,7 @@ async function fetchLiveCategories() {
     }
 }
 
-// SECURE DELETE FUNCTION (WITH PIN CONFIRMATION)
+// SECURE DELETE FUNCTION
 window.deleteCategory = async function(id, categoryName) {
     window.showNeoModal({
         title: 'Security Authorization',

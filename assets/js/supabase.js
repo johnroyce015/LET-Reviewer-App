@@ -7,7 +7,8 @@ window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 // ==========================================
 // UNIVERSAL ACTIVITY LOGGER
 // ==========================================
-window.logSystemActivity = async function(actionType, details) {
+// 🌟 FIX: Added the "overrideEmail" parameter
+window.logSystemActivity = async function(actionType, details, overrideEmail = null) {
     console.log(`🚀 Attempting to log action: [${actionType}]`);
 
     try {
@@ -19,15 +20,18 @@ window.logSystemActivity = async function(actionType, details) {
             return; 
         }
 
+        // 🌟 FIX: Use the override email if provided, otherwise fallback to the current session
+        const finalEmail = overrideEmail || session.user.email;
+
         // 2. Send the log to the Supabase database
         const { data, error } = await window.supabaseClient
             .from('activity_logs')
             .insert([{
-                user_email: session.user.email,
+                user_email: finalEmail,
                 action_type: actionType,
                 description: details
             }])
-            .select(); // .select() forces Supabase to return the inserted row
+            .select(); 
 
         // 3. Catch Database or RLS Errors
         if (error) {
