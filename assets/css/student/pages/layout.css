@@ -1,5 +1,11 @@
-/* File: assets/css/student/pages/layout.css */
-
+/* =========================================
+   GLOBAL STUDENT SCROLL FIX
+========================================= */
+html, body {
+    overflow-y: auto !important;
+    height: auto !important;
+    min-height: 100vh;
+}
 /* GLOBAL UTILITIES */
 .bg-slate {
   background-color: #f8fafc;
