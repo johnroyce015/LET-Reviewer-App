@@ -1,0 +1,73 @@
+/* =========================================
+   ADMIN SCORES PAGE STYLES
+========================================= */
+
+.table-card {
+    background: #ffffff;
+    padding: 20px;
+    border: 3px solid #111827;
+    border-radius: 12px;
+    box-shadow: 6px 6px 0px #111827;
+    margin-bottom: 30px;
+}
+
+.table-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.neo-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 3px solid #111827;
+}
+
+.neo-table th, .neo-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 2px solid #111827;
+    border-right: 2px solid #111827;
+    color: #111827;
+}
+
+.neo-table th:last-child, .neo-table td:last-child {
+    border-right: none;
+}
+
+.neo-table th {
+    background-color: #C4B5FD; /* Primary Purple */
+    font-weight: 900;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.neo-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.neo-table tbody tr:nth-child(even) {
+    background-color: #F8FAFC;
+}
+
+.neo-table tbody tr:hover {
+    background-color: #E0E7FF;
+}
+
+/* Status Badges */
+.score-badge {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 12px;
+    border: 2px solid #111827;
+}
+
+.badge-pass { background-color: #6EE7B7; color: #111827; } /* Subject Mint */
+.badge-fail { background-color: #FCA5A5; color: #111827; } /* Subject Red */

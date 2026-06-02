@@ -32,6 +32,7 @@
                 <a href="categories.html" class="menu-item"><i class="fa-solid fa-layer-group"></i> Categories</a>
                 <a href="users.html" class="menu-item active"><i class="fa-solid fa-users"></i> Users</a>
                 <a href="activity.html" class="menu-item"><i class="fa-solid fa-clipboard-list"></i> Activity Log</a>
+                <a href="scores.html" class="menu-item"><i class="fa-solid fa-chart-simple"></i> Scores</a>
             </nav>
         </div>
         <a href="#" id="logoutBtn" class="menu-item btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
@@ -48,6 +49,16 @@
                 <button class="add-question-btn" id="openAddUserBtn">
                     <i class="fa-solid fa-user-plus"></i> Add User
                 </button>
+            </div>
+
+            <div class="filter-bar">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchUserInput" class="search-input" placeholder="Search by name, email, or course...">
+                </div>
+                <select id="courseFilter" class="filter-select">
+                    <option value="All">All Courses</option>
+                </select>
             </div>
 
             <div class="user-table-grid">
@@ -86,6 +97,10 @@
                     <input type="password" id="newPassword" class="neo-input" required minlength="6">
                 </div>
                 <div class="neo-form-group">
+                    <label class="neo-label">Course / Major</label>
+                    <input type="text" id="newCourse" class="neo-input" placeholder="e.g., BEEd or BSEd-English">
+                </div>
+                <div class="neo-form-group">
                     <label class="neo-label">Account Role</label>
                     <select id="newRole" class="neo-input">
                         <option value="student">Student</option>
@@ -112,6 +127,10 @@
                 <div class="neo-form-group">
                     <label class="neo-label">Full Name</label>
                     <input type="text" id="editName" class="neo-input" required>
+                </div>
+                <div class="neo-form-group">
+                    <label class="neo-label">Course / Major</label>
+                    <input type="text" id="editCourse" class="neo-input" placeholder="e.g., BEEd or BSEd-English">
                 </div>
                 <div class="neo-form-group">
                     <label class="neo-label">Account Role</label>
