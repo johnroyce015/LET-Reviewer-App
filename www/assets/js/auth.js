@@ -23,6 +23,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault(); 
             
+            // 🟢 NEW: Check for internet BEFORE trying to log in!
+            if (!navigator.onLine) {
+                window.showNeoModal({
+                    title: 'No Internet Connection',
+                    icon: 'fa-solid fa-wifi',
+                    message: 'You need an active internet connection to log in to your account. Once logged in, you can use the app offline!',
+                    confirmText: 'Got it',
+                    showCancel: false
+                });
+                return; // Stop the function here so it doesn't crash Supabase
+            }
+
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
 
@@ -74,6 +86,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault(); 
             
+            // 🟢 NEW: Check for internet BEFORE trying to register!
+            if (!navigator.onLine) {
+                window.showNeoModal({
+                    title: 'No Internet Connection',
+                    icon: 'fa-solid fa-wifi',
+                    message: 'You need an active internet connection to register an account.',
+                    confirmText: 'Got it',
+                    showCancel: false
+                });
+                return; // Stop the function here
+            }
+
             const name = document.getElementById('regName').value;
             const email = document.getElementById('regEmail').value;
             const password = document.getElementById('regPassword').value;

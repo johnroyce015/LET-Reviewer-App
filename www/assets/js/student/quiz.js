@@ -1,6 +1,5 @@
 var supabase = window.supabaseClient;
 
-// State Variables
 let currentQuestions = [];
 let currentIndex = 0;
 let userAnswers = {}; 
@@ -11,7 +10,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { window.location.href = '../login.html'; return; }
 
-    const category = localStorage.getItem('activeQuizCategory');
+    // 🟢 Fetch active category from IndexedDB
+    const category = await localforage.getItem('activeQuizCategory');
     if (!category) { window.location.href = 'dashboard.html'; return; }
     
     document.getElementById('quizCategoryLabel').textContent = category;
@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function fetchQuestions(categoryName) {
     document.getElementById('questionText').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching questions...';
 
-    // 🟢 UPDATED: Using OfflineSync bridge[cite: 17]
     const questions = await window.OfflineSync.syncQuestions(categoryName);
 
     if (!questions || questions.length === 0) {
@@ -134,7 +133,8 @@ function confirmQuit() {
     });
 }
 
-function gradeExam() {
+// 🟢 Converted to async to support IndexedDB saves
+async function gradeExam() {
     clearInterval(timerInterval);
     
     let score = 0;
@@ -160,38 +160,31 @@ function gradeExam() {
         }
     });
 
+    // 🟢 Await the active category from IndexedDB
+    const activeCategory = await localforage.getItem('activeQuizCategory');
+
     const resultsPackage = {
-    category: localStorage.getItem('activeQuizCategory'),
-    score: score,
-    total: currentQuestions.length,
-    wrongAnswers: wrongAnswers
-};
+        category: activeCategory,
+        score: score,
+        total: currentQuestions.length,
+        wrongAnswers: wrongAnswers
+    };
 
-// Save for results page
-localStorage.setItem(
-    'letQuizResults',
-    JSON.stringify(resultsPackage)
-);
+    // 🟢 Save straight to IndexedDB
+    await localforage.setItem('letQuizResults', resultsPackage);
 
-// Save for sync system
-const pendingScores =
-    JSON.parse(
-        localStorage.getItem('pending_exam_results')
-    ) || [];
+    const pendingScores = (await localforage.getItem('pending_exam_results')) || [];
 
-pendingScores.push({
-    category: resultsPackage.category,
-    score: score,
-    total: currentQuestions.length,
-    submitted_at: new Date().toISOString()
-});
+    pendingScores.push({
+        category: resultsPackage.category,
+        score: score,
+        total: currentQuestions.length,
+        submitted_at: new Date().toISOString()
+    });
 
-localStorage.setItem(
-    'pending_exam_results',
-    JSON.stringify(pendingScores)
-);
-
-window.location.href = 'results.html';
+    await localforage.setItem('pending_exam_results', pendingScores);
+    
+    window.location.href = 'results.html';
 }
 
 function startTimer() {
@@ -210,7 +203,7 @@ function startTimer() {
         if (timeLeft <= 300) {
             display.style.backgroundColor = '#FEE2E2';
             display.style.color = '#EF4444';
-            display.style.border = '2px solid #EF4444';
+            display.style.border = '2px solid #111827'; 
         }
 
         if (timeLeft <= 0) {

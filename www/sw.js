@@ -1,34 +1,27 @@
-const CACHE_NAME = 'let-reviewer-student-v5';
+const CACHE_NAME = 'let-reviewer-v3';
 
-// Only essential files that MUST exist for the student side
-const ASSETS_TO_CACHE = [
-    '/',
-    '/index.html',
-    '/login.html',
-    '/register.html',
-    '/manifest.json',
-
-    '/student/dashboard.html',
-    '/student/exams.html',
-    '/student/quiz.html',
-    '/student/results.html',
-    '/student/review.html',
-    '/student/insights.html',
-
-    '/assets/js/supabase.js',
-
-    '/assets/js/student/dashboard.js',
-    '/assets/js/student/exams.js',
-    '/assets/js/student/quiz.js',
-    '/assets/js/student/results.js',
-    '/assets/js/student/review.js',
-    '/assets/js/student/insights.js',
-
-    '/assets/js/offline-sync.js'
+const urlsToCache = [
+    './',
+    './index.html',
+    './login.html',
+    './register.html',
+    './manifest.json',
+    './assets/css/style.css',
+    './assets/css/student/pages/dashboard.css',
+    './assets/css/student/pages/quiz.css',
+    './assets/css/student/pages/results.css',
+    './assets/css/student/pages/layout.css',
+    './assets/js/supabase.js',
+    './assets/js/auth.js',
+    './assets/js/offline-sync.js',
+    './student/dashboard.html',
+    './student/exams.html',
+    './student/insights.html',
+    './student/quiz.html',
+    './student/results.html'
 ];
-
 self.addEventListener('install', (event) => {
-    event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE)));
+    event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
     self.skipWaiting();
 });
 

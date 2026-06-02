@@ -3,9 +3,7 @@ window.OfflineSync = {
     syncCategories: async function() {
 
         if (!navigator.onLine) {
-            return JSON.parse(
-                localStorage.getItem('let_categories')
-            ) || [];
+            return (await localforage.getItem('let_categories')) || [];
         }
 
         try {
@@ -17,18 +15,16 @@ window.OfflineSync = {
 
             if (error) throw error;
 
-            localStorage.setItem(
+            await localforage.setItem(
                 'let_categories',
-                JSON.stringify(data)
+                data
             );
 
             return data;
 
         } catch {
 
-            return JSON.parse(
-                localStorage.getItem('let_categories')
-            ) || [];
+            return (await localforage.getItem('let_categories')) || [];
         }
     },
 
@@ -39,9 +35,7 @@ window.OfflineSync = {
 
         if (!navigator.onLine) {
 
-            return JSON.parse(
-                localStorage.getItem(storageKey)
-            ) || [];
+            return (await localforage.getItem(storageKey)) || [];
         }
 
         try {
@@ -54,18 +48,16 @@ window.OfflineSync = {
 
             if (error) throw error;
 
-            localStorage.setItem(
+            await localforage.setItem(
                 storageKey,
-                JSON.stringify(data)
+                data
             );
 
             return data;
 
         } catch {
 
-            return JSON.parse(
-                localStorage.getItem(storageKey)
-            ) || [];
+            return (await localforage.getItem(storageKey)) || [];
         }
     },
 
@@ -73,12 +65,7 @@ window.OfflineSync = {
 
         if (!navigator.onLine) return;
 
-        const pending =
-            JSON.parse(
-                localStorage.getItem(
-                    'pending_exam_results'
-                )
-            ) || [];
+        const pending = (await localforage.getItem('pending_exam_results')) || [];
 
         if (!pending.length) return;
 
@@ -99,28 +86,16 @@ window.OfflineSync = {
                     category: result.category,
                     score: result.score,
                     total: result.total,
-                    submitted_at:
-                        result.submitted_at
+                    submitted_at: result.submitted_at
                 });
 
             if (!error) {
 
-                const remaining =
-                    JSON.parse(
-                        localStorage.getItem(
-                            'pending_exam_results'
-                        )
-                    ) || [];
+                const remaining = (await localforage.getItem('pending_exam_results')) || [];
 
-                localStorage.setItem(
+                await localforage.setItem(
                     'pending_exam_results',
-                    JSON.stringify(
-                        remaining.filter(
-                            x =>
-                            x.submitted_at !==
-                            result.submitted_at
-                        )
-                    )
+                    remaining.filter(x => x.submitted_at !== result.submitted_at)
                 );
             }
         }
