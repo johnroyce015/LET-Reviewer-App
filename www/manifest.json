@@ -1,0 +1,10 @@
+{
+  "name": "LETReviewer System",
+  "short_name": "LETReview",
+  "description": "Offline-capable LET reviewer for students.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0056b3",
+  "orientation": "portrait"
+}

@@ -1,15 +1,14 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const path = window.location.pathname;
     const isDashboard = path.includes('dashboard.html') || path.endsWith('/');
-    const isReview = path.includes('review.html');
+    // ❌ Removed the isReview check
     const isExams = path.includes('exams.html');
     const isInsights = path.includes('insights.html');
 
-    // Cleaned Template Strings (No inline styles)
+    // Cleaned Template Strings (No inline styles - 3 Button Layout)
     const bottomNavHTML = `
         <nav class="bottom-nav">
             <a href="dashboard.html" class="nav-item ${isDashboard ? 'active' : ''}"><i class="fa-solid fa-house"></i><span>Home</span></a>
-            <a href="review.html" class="nav-item ${isReview ? 'active' : ''}"><i class="fa-solid fa-book-open"></i><span>Review</span></a>
             <a href="exams.html" class="nav-item ${isExams ? 'active' : ''}"><i class="fa-solid fa-file-pen"></i><span>Exams</span></a>
             <a href="insights.html" class="nav-item ${isInsights ? 'active' : ''}"><i class="fa-solid fa-chart-line"></i><span>Insights</span></a>
         </nav>
@@ -90,4 +89,4 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
-});
+}); 

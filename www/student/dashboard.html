@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Home - LET Reviewer</title>
+    
+    <link rel="manifest" href="../manifest.json">
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+    <script src="../assets/js/supabase.js" defer></script>
+    <script src="../assets/js/script.js" defer></script>
+    <script src="../assets/js/admin/modals.js" defer></script>
+    <script src="../assets/js/offline-sync.js" defer></script>
+    <script src="../assets/js/student/dashboard.js" defer></script>
+    <script src="../assets/js/student/navigation.js" defer></script>
+</head>
+<body class="bg-slate hidden-body">
+
+<div class="mobile-app-container">
+
+    <!-- Header -->
+    <header class="app-topbar">
+        <div class="user-avatar clickable" id="openProfileSidebar" title="Profile Menu">
+            <i class="fa-solid fa-user"></i>
+        </div>
+        
+        <div class="brand-name">LET Reviewer</div>
+        
+        <div class="notification-bell">
+            <i class="fa-regular fa-bell"></i>
+        </div>
+    </header>
+
+    <main class="app-content dashboard-content">
+        
+        <!-- Greeting -->
+        <div class="welcome-section">
+            <h2 class="welcome-greeting">Hello, <span id="studentFirstName">Maria</span></h2>
+            <p class="welcome-subtitle">Ready to crush your LET goals today?</p>
+        </div>
+        <!-- Resume Learning Card -->
+        <div class="neo-card mobile-card purple-card resume-card">
+            <div class="resume-header-row">
+                <div class="resume-icon-box">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <div class="resume-info">
+                    <span class="resume-label">RESUME LEARNING</span>
+                    <h3 class="resume-title">Professional Education</h3>
+                    <p class="resume-meta">Module 4: Curriculum Development • Topic 2.1</p>
+                </div>
+            </div>
+            <button class="neo-button btn-block btn-resume">
+                Continue Module <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- Weakest Topics -->
+        <h3 class="section-title">Weakest Topics</h3>
+        <div class="weak-topics-list">
+            
+            <div class="weak-topic-card">
+                <div class="weak-icon-box pink-bg">
+                    <i class="fa-solid fa-arrow-trend-down text-red"></i>
+                </div>
+                <div class="weak-details">
+                    <h4 class="weak-title">Child & Adolescent Dev</h4>
+                    <p class="weak-meta">42% Mastery</p>
+                </div>
+                <div class="weak-action">Review Now</div>
+            </div>
+            
+            <div class="weak-topic-card">
+                <div class="weak-icon-box pink-bg">
+                    <i class="fa-solid fa-arrow-trend-down text-red"></i>
+                </div>
+                <div class="weak-details">
+                    <h4 class="weak-title">Number Theory</h4>
+                    <p class="weak-meta">38% Mastery</p>
+                </div>
+                <div class="weak-action">Review Now</div>
+            </div>
+
+        </div>
+
+        <!-- Subject Areas -->
+        <div class="section-header">
+            <h3 class="section-title">Subject Areas</h3>
+            <a href="#" class="view-all-link">View All <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        
+        <div id="quizContainer" class="subject-areas-list">
+            
+            <div class="subject-card yellow-card">
+                <div class="subject-icon-box"><i class="fa-solid fa-earth-americas"></i></div>
+                <span class="subject-name">General Ed</span>
+            </div>
+            
+            <div class="subject-card green-card">
+                <div class="subject-icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
+                <span class="subject-name">Professional Ed</span>
+            </div>
+            
+            <div class="subject-card purple-card">
+                <div class="subject-icon-box"><i class="fa-solid fa-book-bookmark"></i></div>
+                <span class="subject-name">English Major</span>
+            </div>
+
+        </div>
+
+    </main>
+</div>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('../sw.js')
+                .then(reg => console.log('✅ SW Registered on this page'))
+                .catch(err => console.error('❌ SW Failed', err));
+        });
+    }
+</script>
+</body>
+</html>
