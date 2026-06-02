@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activity Log - LET Reviewer</title>
+    <title>Student Scores - LET Reviewer</title>
     
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -11,8 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../assets/js/supabase.js" defer></script>
     <script src="../assets/js/script.js" defer></script>
-    <script src="../assets/js/admin/modals.js" defer></script>
-    <script src="../assets/js/admin/activity.js" defer></script>
+    <script src="../assets/js/admin/scores.js" defer></script>
     <script src="../assets/js/logout.js" defer></script>
 </head>
 <body style="visibility: hidden;">
@@ -29,49 +28,51 @@
                 <a href="questions.html" class="menu-item"><i class="fa-solid fa-circle-question"></i> Questions</a>
                 <a href="categories.html" class="menu-item"><i class="fa-solid fa-layer-group"></i> Categories</a>
                 <a href="users.html" class="menu-item"><i class="fa-solid fa-users"></i> Users</a>
-                <a href="activity.html" class="menu-item active"><i class="fa-solid fa-clipboard-list"></i> Activity Log</a>
-                <a href="scores.html" class="menu-item"><i class="fa-solid fa-chart-simple"></i> Scores</a>
+                <a href="activity.html" class="menu-item"><i class="fa-solid fa-clipboard-list"></i> Activity Log</a>
+                <a href="scores.html" class="menu-item active"><i class="fa-solid fa-chart-simple"></i> Scores</a>
             </nav>
         </div>
         <a href="#" id="logoutBtn" class="menu-item btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
     </aside>
 
     <main class="dashboard-main">
-        <div class="activity-page">
+        <div class="questions-page">
             
             <div class="questions-header">
                 <div>
-                    <h1 class="questions-title">Activity Log</h1>
-                    <p class="questions-subtitle">Monitor system changes, mock exam updates, and user actions.</p>
+                    <h1 class="questions-title">Student Scores</h1>
+                    <p class="questions-subtitle">Track synced exam results and student mastery.</p>
                 </div>
-                <button class="btn-cancel" onclick="fetchLiveLogs()">
-                    <i class="fa-solid fa-rotate-right"></i> Refresh
+                <button class="add-question-btn" id="refreshScoresBtn">
+                    <i class="fa-solid fa-arrows-rotate"></i> Refresh
                 </button>
             </div>
 
-            <div class="log-table-header">
-                <div>Timestamp</div>
-                <div>User</div>
-                <div>Action</div>
-                <div>Details</div>
+            <div class="filter-bar">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchScoreInput" class="search-input" placeholder="Search by student name...">
+                </div>
+                <select id="scoreCategoryFilter" class="filter-select">
+                    <option value="All">All Subjects</option>
+                </select>
             </div>
 
-            <div id="logsContainer">
-                <div class="loading-state">Loading activity logs...</div>
+            <div class="user-table-grid">
+                <div>Date Sync</div>
+                <div>Student Name</div>
+                <div>Subject Area</div>
+                <div>Raw Score</div>
+                <div>Mastery</div>
+            </div>
+
+            <div id="scoresContainer">
+                <div class="loading-state">Loading scores...</div>
             </div>
 
         </div>
     </main>
 </div>
-
-<template id="logRowTemplate">
-    <div class="log-row">
-        <div class="log-time"></div>
-        <div class="log-user"><i class="fa-solid fa-user-tie"></i> <span class="user-email-text"></span></div>
-        <div><span class="action-badge"></span></div>
-        <div class="log-desc"></div>
-    </div>
-</template>
 
 </body>
 </html>

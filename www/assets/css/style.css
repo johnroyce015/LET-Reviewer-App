@@ -22,6 +22,7 @@
 @import 'admin/pages/users.css';
 @import 'admin/pages/bulk-upload.css';
 @import 'admin/pages/activity.css';
+@import 'admin/pages/scores.css';
 
 /* 4. Student Pages */
 @import 'student/pages/dashboard.css';
