@@ -63,6 +63,14 @@
     box-shadow: 2px 2px 0px #111827;
     white-space: nowrap;
 }
+/* Neo-Brutalist Dotted Background */
+.quiz-dots-theme {
+    background-color: #C4B5FD; /* The signature light purple */
+    background-image: radial-gradient(#111827 2px, transparent 2px); /* Black dots */
+    background-size: 30px 30px;
+    background-position: 0 0;
+    min-height: 100vh;
+}
 
 /* Progress Bar */
 .progress-container {

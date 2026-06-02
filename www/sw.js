@@ -1,4 +1,4 @@
-const CACHE_NAME = 'let-reviewer-v3';
+const CACHE_NAME = 'let-reviewer';
 
 const urlsToCache = [
     './',
@@ -35,15 +35,25 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// 🟢 SMART FETCH: If it's not in the cache, just fetch from network. 
-// Do NOT crash if the file is missing!
+// 🟢 SMART FETCH: Network-First, Fallback to Cache
 self.addEventListener('fetch', (event) => {
+    // Ignore Supabase database calls (POST requests cannot be cached)
+    if (event.request.method !== 'GET') return;
+
     event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            return cachedResponse || fetch(event.request).catch(() => {
-                console.log("⚠️ Could not fetch:", event.request.url);
-                return new Response(); // Return empty response instead of crashing
-            });
-        })
+        fetch(event.request)
+            .then((networkResponse) => {
+                const clonedResponse = networkResponse.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, clonedResponse);
+                });
+                
+                return networkResponse;
+            })
+            .catch(() => {
+                return caches.match(event.request).then((cachedResponse) => {
+                    return cachedResponse || new Response(); 
+                });
+            })
     );
 });

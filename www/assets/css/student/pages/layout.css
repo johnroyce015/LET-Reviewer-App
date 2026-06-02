@@ -83,17 +83,6 @@ html, body {
 }
 
 /* DASHBOARD ELEMENTS */
-.welcome-greeting {
-  margin: 0;
-  color: #4b5563;
-  font-size: 14px;
-}
-.welcome-title {
-  margin: 5px 0 0 0;
-  font-size: 18px;
-  line-height: 1.3;
-}
-
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -338,4 +327,49 @@ html, body {
   background: #ef4444;
   color: #fff;
   font-size: 16px;
+}
+/* =========================================
+   BOTTOM NAVIGATION 
+========================================= */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    max-width: 480px;
+    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-around;
+    background: #ffffff;
+    border-top: 3px solid #111827;
+    padding: 12px 0 20px 0;
+    z-index: 100;
+}
+
+.bottom-nav .nav-item {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: #4B5563; /* Inactive gray */
+    padding: 8px 20px;
+    border-radius: 8px;
+}
+
+.bottom-nav .nav-item i {
+    font-size: 20px;
+}
+
+.bottom-nav .nav-item span {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+/* The Active Style from the Design */
+.bottom-nav .nav-item.active {
+    background-color: #C4B5FD; /* Purple Background */
+    color: #111827; /* Black Icons/Text */
+    border: 2px solid #111827;
+    box-shadow: 3px 3px 0px #111827;
 }

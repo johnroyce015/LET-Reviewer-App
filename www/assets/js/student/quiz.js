@@ -10,9 +10,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { window.location.href = '../login.html'; return; }
 
-    // 🟢 Fetch active category from IndexedDB
-    const category = await localforage.getItem('activeQuizCategory');
-    if (!category) { window.location.href = 'dashboard.html'; return; }
+    // 🟢 THE FIX: Read active category from standard localStorage!
+    const category = localStorage.getItem('activeQuizCategory');
+    
+    if (!category) { 
+        console.warn("No category found in localStorage. Kicking to dashboard.");
+        window.location.href = 'dashboard.html'; 
+        return; 
+    }
     
     document.getElementById('quizCategoryLabel').textContent = category;
 
@@ -26,6 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function fetchQuestions(categoryName) {
     document.getElementById('questionText').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Fetching questions...';
 
+    // Pull heavy data using your OfflineSync engine (which uses localforage)
     const questions = await window.OfflineSync.syncQuestions(categoryName);
 
     if (!questions || questions.length === 0) {
@@ -133,7 +139,6 @@ function confirmQuit() {
     });
 }
 
-// 🟢 Converted to async to support IndexedDB saves
 async function gradeExam() {
     clearInterval(timerInterval);
     
@@ -160,8 +165,8 @@ async function gradeExam() {
         }
     });
 
-    // 🟢 Await the active category from IndexedDB
-    const activeCategory = await localforage.getItem('activeQuizCategory');
+    // 🟢 THE FIX: Read category from standard localStorage
+    const activeCategory = localStorage.getItem('activeQuizCategory');
 
     const resultsPackage = {
         category: activeCategory,
@@ -170,7 +175,7 @@ async function gradeExam() {
         wrongAnswers: wrongAnswers
     };
 
-    // 🟢 Save straight to IndexedDB
+    // Save heavy exam history straight to IndexedDB (localforage)
     await localforage.setItem('letQuizResults', resultsPackage);
 
     const pendingScores = (await localforage.getItem('pending_exam_results')) || [];

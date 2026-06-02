@@ -23,66 +23,97 @@
 
 <div class="mobile-app-container">
 
+    <!-- Header -->
     <header class="app-topbar">
         <div class="user-avatar clickable" id="openProfileSidebar" title="Profile Menu">
             <i class="fa-solid fa-user"></i>
         </div>
-        <div class="brand-name">LETReviewer</div>
+        
+        <div class="brand-name">LET Reviewer</div>
+        
         <div class="notification-bell">
             <i class="fa-regular fa-bell"></i>
         </div>
     </header>
 
-    <main class="app-content">
+    <main class="app-content dashboard-content">
+        
+        <!-- Greeting -->
         <div class="welcome-section">
-            <div>
-                <p class="welcome-greeting">Hello, <span id="studentFirstName">Student</span></p>
-                <h2 class="welcome-title">Ready to crush your LET<br>goals today?</h2>
-            </div>
+            <h2 class="welcome-greeting">Hello, <span id="studentFirstName">Maria</span></h2>
+            <p class="welcome-subtitle">Ready to crush your LET goals today?</p>
         </div>
-
+        <!-- Resume Learning Card -->
         <div class="neo-card mobile-card purple-card resume-card">
-            <div class="resume-header">
-                <i class="fa-regular fa-circle-play"></i>
-                <span class="resume-label">Resume Quiz</span>
+            <div class="resume-header-row">
+                <div class="resume-icon-box">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+                <div class="resume-info">
+                    <span class="resume-label">RESUME LEARNING</span>
+                    <h3 class="resume-title">Professional Education</h3>
+                    <p class="resume-meta">Module 4: Curriculum Development • Topic 2.1</p>
+                </div>
             </div>
-            <h3 class="resume-title">Professional Education Mock Exam</h3>
-            <p class="resume-meta">Question 14 of 50 • 25 mins left</p>
-            <button class="neo-button btn-small btn-resume">
-                Continue Quiz <i class="fa-solid fa-arrow-right"></i>
+            <button class="neo-button btn-block btn-resume">
+                Continue Module <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
 
-        <div class="neo-card mobile-card white-card readiness-card">
-            <h3 class="readiness-title">Overall Readiness</h3>
-            <p class="readiness-desc">You're on track! Keep pushing forward.</p>
+        <!-- Weakest Topics -->
+        <h3 class="section-title">Weakest Topics</h3>
+        <div class="weak-topics-list">
             
-            <div class="readiness-score-container">
-                <div class="readiness-score">78%</div>
-                <div class="status-pill">Good Standing</div>
+            <div class="weak-topic-card">
+                <div class="weak-icon-box pink-bg">
+                    <i class="fa-solid fa-arrow-trend-down text-red"></i>
+                </div>
+                <div class="weak-details">
+                    <h4 class="weak-title">Child & Adolescent Dev</h4>
+                    <p class="weak-meta">42% Mastery</p>
+                </div>
+                <div class="weak-action">Review Now</div>
             </div>
             
-            <div class="readiness-stats">
-                <span>Progress</span>
-                <span>78/100</span>
+            <div class="weak-topic-card">
+                <div class="weak-icon-box pink-bg">
+                    <i class="fa-solid fa-arrow-trend-down text-red"></i>
+                </div>
+                <div class="weak-details">
+                    <h4 class="weak-title">Number Theory</h4>
+                    <p class="weak-meta">38% Mastery</p>
+                </div>
+                <div class="weak-action">Review Now</div>
             </div>
-            <div class="progress-track">
-                <div class="progress-fill" style="width: 78%; background: #6EE7B7;"></div>
+
+        </div>
+
+        <!-- Subject Areas -->
+        <div class="section-header">
+            <h3 class="section-title">Subject Areas</h3>
+            <a href="#" class="view-all-link">View All <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        
+        <div id="quizContainer" class="subject-areas-list">
+            
+            <div class="subject-card yellow-card">
+                <div class="subject-icon-box"><i class="fa-solid fa-earth-americas"></i></div>
+                <span class="subject-name">General Ed</span>
             </div>
+            
+            <div class="subject-card green-card">
+                <div class="subject-icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
+                <span class="subject-name">Professional Ed</span>
+            </div>
+            
+            <div class="subject-card purple-card">
+                <div class="subject-icon-box"><i class="fa-solid fa-book-bookmark"></i></div>
+                <span class="subject-name">English Major</span>
+            </div>
+
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="margin: 0;">Subject Areas</h3>
-            <a href="#" style="font-size: 14px; font-weight: bold; color: #6B7280; text-decoration: none;">View All ></a>
-        </div>
-
-        <div id="quizContainer" class="subject-stack">
-            <div class="state-loading">Fetching your review modules...</div>
-        </div>
-
-        </div>
     </main>
-
 </div>
 
 <script>
