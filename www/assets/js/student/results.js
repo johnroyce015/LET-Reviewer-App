@@ -2,14 +2,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Fetch the saved results from browser memory
     const resultsJSON = localStorage.getItem('letQuizResults');
     
-    // If someone tries to access this page directly without taking an exam, kick them out
     if (!resultsJSON) {
         window.location.href = 'dashboard.html';
         return;
     }
 
     const results = JSON.parse(resultsJSON);
-    const percentage = (results.score / results.total) * 100;
+    const percentage = Math.round((results.score / results.total) * 100);
 
     // 2. Populate the Score Card
     document.getElementById('resultCategory').textContent = results.category || 'Mock Exam';
@@ -27,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. Render the Mistakes Grid using clean CSS classes!
     const mistakesContainer = document.getElementById('mistakesContainer');
+    mistakesContainer.innerHTML = '';
+
     if (results.wrongAnswers && results.wrongAnswers.length > 0) {
         results.wrongAnswers.forEach(mistake => {
             mistakesContainer.innerHTML += `
@@ -40,10 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         });
     } else {
-        // Perfect Score State
         mistakesContainer.innerHTML = `
             <div class="neo-card mobile-card perfect-card">
-                <p class="perfect-msg">Perfect Score! No mistakes to review.</p>
+                <p class="perfect-msg">🎉 Perfect Score! No mistakes to review.</p>
             </div>
         `;
     }
